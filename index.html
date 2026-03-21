@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VINI'S WORLD</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    
+    <style>
+        /* =========================================
+           1. ESTILOS GENERALES Y RETRO
+           ========================================= */
+        body {
+            margin: 0;
+            padding: 20px;
+            background-color: #ffe6f2; 
+            background-image: radial-gradient(#ff69b4 20%, transparent 20%);
+            background-size: 20px 20px; 
+            font-family: 'VT323', monospace; 
+            overflow-x: hidden; 
+            padding-bottom: 50px; 
+            
+            /* TODO EN NEGRITA Y CURSIVA */
+            font-weight: bold; 
+            font-style: italic; 
+        }
+
+        /* Efecto Scanlines (TV Antigua) */
+        body::after {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
+            background-size: 100% 4px;
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        /* Barra de Desplazamiento */
+        ::-webkit-scrollbar { width: 15px; }
+        ::-webkit-scrollbar-track { background: #ffe6f2; border-left: 2px solid #ff69b4; }
+        ::-webkit-scrollbar-thumb { 
+            background-color: #ff69b4; 
+            border: 2px solid #ffffff; 
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.2); 
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto; 
+            position: relative;
+            z-index: 10; 
+        }
+
+        /* =========================================
+           2. ESTILO PEGATINA FANTASMA
+           ========================================= */
+        .sticker-fantasma {
+            position: absolute;
+            z-index: 0;
+            opacity: 0.85; 
+            border-radius: 8px;
+            filter: sepia(0.7) hue-rotate(230deg) saturate(1.3) contrast(1.1) brightness(1.1);
+            transition: all 0.4s ease;
+            box-shadow: 2px 2px 15px rgba(255, 105, 180, 0.3);
+            max-width: 280px;
+            height: auto;
+        }
+        .sticker-fantasma:hover {
+            opacity: 1;
+            transform: scale(1.1) rotate(0deg) !important; 
+            filter: none; 
+            z-index: 100; 
+            cursor: pointer;
+            box-shadow: 0 0 25px rgba(255, 105, 180, 0.9);
+            border: 3px solid white;
+        }
+
+        /* =========================================
+           3. BARRA SUPERIOR (VINI'S WORLD ANIMADO)
+           ========================================= */
+        .top-bar {
+            display: flex; 
+            justify-content: space-between;
+            align-items: center;
+            background: #ff69b4; 
+            border: 2px solid white; 
+            color: white; 
+            font-size: 1.4rem;
+            margin-bottom: 25px; 
+            box-shadow: 4px 4px 0 rgba(255,105,180,0.4);
+            padding: 5px 15px; 
+            height: 50px; 
+        }
+
+        .marquee-container { display: flex; align-items: center; }
+
+        /* LOGO ANIMADO CON DESTELLO ROSA */
+        .vinis-logo-animated {
+            font-family: 'VT323', monospace;
+            font-weight: bold;
+            font-size: 2.2rem;
+            line-height: 1;
+            transform: skewX(-10deg);
+            white-space: nowrap;
+            background: linear-gradient(to right, #ffffff 0%, #ffffff 45%, #ff1493 50%, #ffffff 55%, #ffffff 100%);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            text-fill-color: transparent;
+            -webkit-text-fill-color: transparent;
+            animation: pinkShine 3s linear infinite reverse;
+        }
+
+        @keyframes pinkShine { to { background-position: 200% center; } }
+
+        .visitor-counter { white-space: nowrap; font-weight: bold; }
+
+        /* =========================================
+           4. VENTANAS (LAS "TABLAS")
+           ========================================= */
+        .window {
+            background: #ffffff;
+            border: 2px solid #ff69b4; 
+            box-shadow: 6px 6px 0px rgba(255, 105, 180, 0.4); 
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .window-header {
+            background: linear-gradient(to right, #ff69b4, #ffb6c1);
+            color: white;
+            padding: 5px 10px;
+            font-size: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #ff69b4;
+        }
+
+        .window-controls span {
+            display: inline-block;
+            width: 15px; height: 15px;
+            border: 1px solid white;
+            background: #ffccdd;
+            margin-left: 2px;
+        }
+
+        .window-body {
+            padding: 20px;
+            color: #d63384;
+            font-size: 1.3rem;
+            line-height: 1.4;
+            text-align: center; 
+        }
+
+        /* =========================================
+           5. PERFIL Y DECORACIÓN EXTRA
+           ========================================= */
+        .profile-pic { float: left; margin-right: 15px; width: 120px; border: 2px dashed #ff69b4; }
+
+        .sticker { position: fixed; z-index: 1; pointer-events: none; opacity: 0.9; }
+        .s1 { top: 10%; left: 5%; width: 100px; animation: flotar 3s infinite;}
+        .s2 { bottom: 10%; right: 5%; width: 150px; animation: flotar 4s infinite reverse;}
+        .s3 { top: 40%; right: 10%; width: 80px; }
+        @keyframes flotar { 
+            0% { transform: translateY(0px); } 
+            50% { transform: translateY(-10px); } 
+            100% { transform: translateY(0px); } 
+        }
+
+        /* =========================================
+           6. NUEVO: ESTILOS PARA LA TABLA DE JUEGOS
+           ========================================= */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .game-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff0f5;
+            border: 2px solid #ff69b4;
+            padding: 15px;
+            text-decoration: none;
+            color: #d63384;
+            font-family: 'VT323', monospace;
+            font-size: 1.4rem;
+            box-shadow: 4px 4px 0px rgba(255, 105, 180, 0.3);
+            transition: all 0.2s;
+            border-radius: 8px;
+        }
+
+        .game-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px rgba(255, 105, 180, 0.5);
+            background-color: #ff69b4;
+            color: white;
+            border-color: white;
+        }
+
+        .game-btn i {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        /* =========================================
+           7. ARTEFACTOS RETRO (DISEÑO CSS PURO)
+           ========================================= */
+        
+        .artifacts-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            padding-top: 10px;
+            align-items: flex-end;
+        }
+
+        .artifact-label {
+            display: block;
+            margin-top: 5px;
+            font-size: 1rem;
+            color: #ff69b4;
+            font-weight: bold;
+        }
+
+        /* ESTILOS DE CONSOLAS */
+        .gameboy-css { width: 140px; height: 220px; background-color: #ffb7c5; border-radius: 10px 10px 30px 10px; border: 3px solid #ff69b4; box-shadow: 4px 4px 0px rgba(255, 105, 180, 0.3); position: relative; display: flex; flex-direction: column; align-items: center; }
+        .gb-screen-area { background-color: #ff85c2; width: 110px; height: 90px; margin-top: 15px; border-radius: 5px 5px 20px 5px; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; border: 2px solid #ff1493; }
+        .gb-screen { background-color: #c0dcc0; width: 80px; height: 60px; box-shadow: inset 2px 2px 4px rgba(0,0,0,0.2); display: flex; justify-content: center; align-items: center; font-family: 'VT323', monospace; color: #5d7a46; font-weight: bold; font-size: 1rem; margin-bottom: 5px; border: 1px solid #8b9c6b; }
+        .gb-logo { font-size: 0.6rem; color: #ffffff; font-weight: bold; font-style: italic; align-self: flex-start; margin-left: 15px; }
+        .press-start { font-size: 0.8rem; animation: blink 1s infinite; letter-spacing: 1px;}
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .gb-controls { width: 100%; height: 80px; position: relative; }
+        .d-pad { position: absolute; top: 15px; left: 10px; width: 40px; height: 40px; }
+        .d-pad div { background-color: #ff1493; position: absolute; border-radius: 2px; }
+        .d-pad .h { width: 40px; height: 12px; top: 14px; left: 0; }
+        .d-pad .v { width: 12px; height: 40px; top: 0; left: 14px; }
+        .ab-btns { position: absolute; top: 20px; right: 10px; display: flex; gap: 5px; transform: rotate(-15deg); }
+        .btn-round { width: 15px; height: 15px; background-color: #ff1493; border-radius: 50%; box-shadow: 1px 1px 0 rgba(0,0,0,0.2); }
+        .start-select { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; }
+        .btn-pill { width: 20px; height: 6px; background-color: #999; border-radius: 5px; transform: rotate(-25deg); }
+
+        .gba-css { width: 180px; height: 100px; background-color: #ffb6c1; border-radius: 50px 50px 50px 50px; border: 3px solid #ff69b4; box-shadow: 4px 4px 0px rgba(255, 105, 180, 0.3); position: relative; display: flex; justify-content: center; align-items: center; }
+        .gba-screen-area { width: 100px; height: 70px; background: #ff85c2; border-radius: 10px 10px 25px 10px; display: flex; justify-content: center; align-items: center; }
+        .gba-screen { width: 80px; height: 55px; background: #ffffff; border-radius: 5px; box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1); position: relative; overflow: hidden; }
+        .gba-screen::after { content: ""; position: absolute; top: -10px; left: -10px; width: 120%; height: 20px; background: rgba(255,255,255,0.3); transform: rotate(20deg); }
+        .gba-dpad { position: absolute; left: 15px; top: 35px; width: 30px; height: 30px; }
+        .gba-dpad div { background: #d63384; position: absolute; border-radius: 2px; }
+        .gba-dpad .h { width: 30px; height: 10px; top: 10px; }
+        .gba-dpad .v { width: 10px; height: 30px; left: 10px; }
+        .gba-btns { position: absolute; right: 15px; top: 35px; display: flex; gap: 5px; transform: rotate(-20deg); }
+        .gba-btn { width: 12px; height: 12px; background: #d63384; border-radius: 50%; box-shadow: 1px 1px 0 rgba(0,0,0,0.2); }
+
+        .nes-css { width: 170px; height: 75px; background: #f0f0f0; border: 3px solid #ffb6c1; box-shadow: 4px 4px 0px rgba(0,0,0,0.1); position: relative; display: flex; align-items: center; justify-content: center; }
+        .nes-stripe { width: 160px; height: 65px; background: #e6e6e6; border: 1px solid #ccc; position: relative; display: flex; align-items: center; }
+        .nes-black-zone { width: 100%; height: 35px; background: #ffffff; border: 2px solid #ff69b4; display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; }
+        .nes-dpad { position: relative; width: 30px; height: 30px; margin-left: 5px; }
+        .nes-dpad div { background: #ffffff; border: 1px solid #ff69b4; position: absolute; }
+        .nes-dpad .h { width: 30px; height: 10px; top: 10px; }
+        .nes-dpad .v { width: 10px; height: 30px; left: 10px; }
+        .nes-btns { display: flex; gap: 10px; margin-right: 15px; }
+        .nes-btn { width: 15px; height: 15px; background: #ff69b4; border-radius: 50%; border: 1px solid #ff1493; box-shadow: 1px 1px 0 rgba(0,0,0,0.2); }
+
+        .phone-css { width: 70px; height: 150px; background: #ffccdd; border-radius: 10px; border: 3px solid #ff69b4; box-shadow: 4px 4px 0px rgba(255, 105, 180, 0.3); position: relative; display: flex; flex-direction: column; align-items: center; }
+        .phone-antenna { position: absolute; top: -20px; right: 10px; width: 8px; height: 20px; background: #ff69b4; border-radius: 4px 4px 0 0; border: 2px solid #d63384; border-bottom: none; }
+        .phone-screen { width: 50px; height: 35px; background: #b0e0e6; margin-top: 15px; border: 2px solid #ff69b4; border-radius: 4px; display: flex; justify-content: center; align-items: center; font-size: 8px; }
+        .phone-keys { display: flex; flex-wrap: wrap; justify-content: center; gap: 3px; width: 50px; margin-top: 15px; }
+        .phone-key { width: 12px; height: 8px; background: white; border-radius: 2px; box-shadow: 1px 1px 0 #ccc; }
+
+        /* =========================================
+           8. BOTONES SOCIALES
+           ========================================= */
+        
+        /* CONTENEDOR FLEX PARA LOS BOTONES SOCIALES */
+        .social-flex-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px; 
+            padding: 10px;
+            flex-wrap: wrap; 
+        }
+
+        .cute-btn-social { 
+            width: 60px; height: 60px; 
+            background-color: #fff; 
+            border: 3px solid #ff69b4; 
+            border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; 
+            text-decoration: none; 
+            font-size: 30px; 
+            color: #ff69b4; 
+            box-shadow: 4px 4px 0px rgba(255, 105, 180, 0.4); 
+            transition: all 0.3s; 
+        }
+        
+        .cute-btn-social:hover { 
+            background-color: #ff69b4; 
+            color: #fff; 
+            box-shadow: -3px 0 0 #ff1493, 3px 0 0 #ff69b4, 0 0 20px #ff69b4; 
+            animation: temblor 0.3s infinite; 
+        }
+        
+        @keyframes temblor { 
+            0% { transform: translateY(-5px) rotate(0deg); } 
+            25% { transform: translateY(-5px) rotate(3deg); } 
+            75% { transform: translateY(-5px) rotate(-3deg); } 
+            100% { transform: translateY(-5px) rotate(0deg); } 
+        }
+
+    </style>
+</head>
+<body>
+
+    <img src="Angel2.gif"  class="sticker-fantasma" style="top: 20px; left: -20px; transform: rotate(-15deg); width: 250px;">
+    <img src="Angel6.jpg"  class="sticker-fantasma" style="top: 180px; left: 80px; transform: rotate(5deg); width: 220px;">
+    <img src="Angel9.jpg"  class="sticker-fantasma" style="top: 350px; left: 0px; transform: rotate(-10deg); width: 260px;">
+    <img src="Angel4.png"  class="sticker-fantasma" style="top: 550px; left: 100px; transform: rotate(12deg); width: 200px;">
+    <img src="Angel11.jpg" class="sticker-fantasma" style="top: 700px; left: -30px; transform: rotate(-20deg); width: 280px;">
+    <img src="Angel13.jpg" class="sticker-fantasma" style="top: 950px; left: 60px; transform: rotate(8deg); width: 240px;">
+    <img src="Angel15.jpg" class="sticker-fantasma" style="top: 1150px; left: 10px; transform: rotate(-5deg); width: 210px;">
+    <img src="Angel19.jpg" class="sticker-fantasma" style="top: 1300px; left: 90px; transform: rotate(15deg); width: 190px;">
+    <img src="Angel21.gif" class="sticker-fantasma" style="top: 1500px; left: -10px; transform: rotate(-10deg); width: 230px;">
+    <img src="Angel3.gif"  class="sticker-fantasma" style="top: 40px; right: -10px; transform: rotate(10deg); width: 240px;">
+    <img src="Angel5.jpg"  class="sticker-fantasma" style="top: 220px; right: 90px; transform: rotate(-8deg); width: 210px;">
+    <img src="Angel7.jpg"  class="sticker-fantasma" style="top: 400px; right: 10px; transform: rotate(5deg); width: 270px;">
+    <img src="Angel10.jpg" class="sticker-fantasma" style="top: 600px; right: 110px; transform: rotate(-12deg); width: 180px;">
+    <img src="Angel12.jpg" class="sticker-fantasma" style="top: 750px; right: -20px; transform: rotate(18deg); width: 260px;">
+    <img src="Angel14.jpg" class="sticker-fantasma" style="top: 1000px; right: 70px; transform: rotate(-6deg); width: 230px;">
+    <img src="Angel16.jpg" class="sticker-fantasma" style="top: 1200px; right: 20px; transform: rotate(9deg); width: 200px;">
+    <img src="Angel17.jpg" class="sticker-fantasma" style="top: 1350px; right: 100px; transform: rotate(-15deg); width: 220px;">
+    <img src="Angel18.jpg" class="sticker-fantasma" style="top: 1550px; right: 0px; transform: rotate(7deg); width: 250px;">
+    <img src="Angel20.jpg" class="sticker-fantasma" style="top: 1700px; right: 60px; transform: rotate(-9deg); width: 190px;">
+
+    <img src="https://media.tenor.com/On7KVX2qQSwAAAAi/spinning-star.gif" class="sticker s1">
+    <img src="https://media.tenor.com/Nn81b5b4e7QAAAAi/hellokitty-sanrio.gif" class="sticker s2">
+    <img src="https://media.tenor.com/Zh5qbaOqK_kAAAAi/pixel-heart.gif" class="sticker s3">
+
+    <div class="container">
+
+        <div class="top-bar">
+            <div class="marquee-container">
+                <div class="vinis-logo-animated">VINI'S WORLD:</div>
+            </div>
+            <div class="visitor-counter">VISITAS: <span id="visit-count">000000</span></div>
+        </div>
+
+        <div class="window">
+            <div class="window-header">
+                <span><b><i>♥ Vini's Lore ♥</i></b></span>
+                <div class="window-controls"><span></span><span></span></div>
+            </div>
+            <div class="window-body" style="text-align: left;">
+                <img src="Chica_Angel_1.gif" alt="Chica Ángel" class="profile-pic">
+                <p><b><i>¡Holaaa! ¡Soy Vini! (≧◡≦)</i></b></p>
+                <p><b><i>Hubo una vez una chica nacida en el abismo, un lugar donde la luz era solo un rumor y la oscuridad enseñaba a sobrevivir, no a soñar.
+
+Cansada de vivir sin horizonte, decidió ascender. Cada paso dolía, cada caída le robaba un recuerdo, pero siguió subiendo, guiada por una luz que nunca había visto.
+
+Cuando por fin alcanzó la superficie, el cielo la recibió como un milagro. Azul, infinito, imposible. Se enamoró de él en el mismo instante.
+
+Su cuerpo, agotado por el viaje, no resistió. Pero su deseo de libertad fue más fuerte que la muerte.
+
+Allí donde cayó, el cielo la reclamó… y ella despertó con alas. </i></b></p>
+                
+            </div>
+        </div>
+
+        <div class="window">
+            <div class="window-header">
+                <span>★ Asciende Conmigo Al Cielo ★</span>
+                <div class="window-controls"><span></span><span></span></div>
+            </div>
+            <div class="window-body">
+                <p style="margin-bottom: 20px;">El cielo no es para cualquiera. ¿Te atreves a subir?</p>
+                
+                <div class="social-flex-container">
+                    
+                    <a href="https://discord.gg/E7n75A2UXT" target="_blank" class="cute-btn-social" title="Discord">
+                        <i class="fa-brands fa-discord"></i>
+                    </a>
+                    
+                    <a href="https://www.instagram.com/vinilicbones?igsh=bWtrYmI0YnR3b28w" target="_blank" class="cute-btn-social" title="Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    
+                    <a href="https://www.tiktok.com/@jennie_version00" target="_blank" class="cute-btn-social" title="TikTok">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+
+                    <a href="https://whatsapp.com/channel/0029VbCBG4C1HspwdEwmfV0o" target="_blank" class="cute-btn-social" title="Canal de WhatsApp">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="window">
+            <div class="window-header">
+                <span>★ ARCADE ROOM ★</span>
+                <div class="window-controls"><span></span><span></span></div>
+            </div>
+            <div class="window-body">
+                <p>¡Elige tu juego favorito y diviértete!</p>
+                
+                <div class="games-grid">
+                    <a href="pacman.php" class="game-btn">
+                        <i class="fas fa-ghost"></i>
+                        <span>PACMAN</span>
+                    </a>
+                    <a href="tetris.php" class="game-btn">
+                        <i class="fas fa-cubes"></i>
+                        <span>TETRIS</span>
+                    </a>
+                    <a href="flappybird.php" class="game-btn">
+                        <i class="fas fa-dove"></i>
+                        <span>FLAPPY BIRD</span>
+                    </a>
+                    <a href="pingpong.php" class="game-btn">
+                        <i class="fas fa-table-tennis-paddle-ball"></i>
+                        <span>PING PONG</span>
+                    </a>
+                    <a href="copycat.php" class="game-btn">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>COPYCAT</span>
+                    </a>
+                    <a href="ahorcado.php" class="game-btn">
+                        <i class="fas fa-pencil"></i>
+                        <span>AHORCADO</span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+        <div class="window">
+            <div class="window-header">
+                <span>★ Artefactos Retro ★</span>
+                <div class="window-controls"><span></span><span></span></div>
+            </div>
+            <div class="window-body">
+                <p style="margin-bottom: 15px; font-size: 1.1rem;">Mi colección de tesoros:</p>
+                
+                <div class="artifacts-grid">
+                    <div>
+                        <div class="gameboy-css">
+                            <div class="gb-screen-area">
+                                <span class="gb-logo">GAME BOY</span>
+                                <div class="gb-screen">
+                                    <span class="press-start">PRESS START</span>
+                                </div>
+                            </div>
+                            <div class="gb-controls">
+                                <div class="d-pad"><div class="v"></div><div class="h"></div></div>
+                                <div class="ab-btns"><div class="btn-round"></div><div class="btn-round"></div></div>
+                                <div class="start-select"><div class="btn-pill"></div><div class="btn-pill"></div></div>
+                            </div>
+                        </div>
+                        <span class="artifact-label">Classic</span>
+                    </div>
+
+                    <div>
+                        <div class="gba-css">
+                            <div class="gba-dpad"><div class="v"></div><div class="h"></div></div>
+                            <div class="gba-screen-area"><div class="gba-screen"></div></div>
+                            <div class="gba-btns"><div class="gba-btn"></div><div class="gba-btn"></div></div>
+                        </div>
+                        <span class="artifact-label">Advance</span>
+                    </div>
+
+                    <div>
+                        <div class="nes-css">
+                            <div class="nes-stripe">
+                                <div class="nes-black-zone">
+                                    <div class="nes-dpad"><div class="v"></div><div class="h"></div></div>
+                                    <span style="color: #ff69b4; font-size: 1.2rem;">♥</span>
+                                    <div class="nes-btns"><div class="nes-btn"></div><div class="nes-btn"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="artifact-label">NES</span>
+                    </div>
+
+                    <div>
+                        <div class="phone-css">
+                            <div class="phone-antenna"></div>
+                            <div class="phone-screen">CALL ME</div>
+                            <div class="phone-keys">
+                                <div class="phone-key"></div><div class="phone-key"></div><div class="phone-key"></div>
+                                <div class="phone-key"></div><div class="phone-key"></div><div class="phone-key"></div>
+                                <div class="phone-key"></div><div class="phone-key"></div><div class="phone-key"></div>
+                            </div>
+                        </div>
+                        <span class="artifact-label">Old Phone</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // CONTADOR
+        let visits = localStorage.getItem('my_kawaii_visits');
+        if (!visits) { visits = 0; } else { visits = parseInt(visits); }
+        visits = visits + 1;
+        localStorage.setItem('my_kawaii_visits', visits);
+        document.getElementById('visit-count').innerText = visits.toString().padStart(6, '0');
+    </script>
+    <div class="window">
+            <div class="window-header">
+                <span>© Créditos & Referencias (APA)</span>
+                <div class="window-controls"><span></span><span></span></div>
+            </div>
+            <div class="window-body" style="text-align: left; padding: 25px;">
+                
+                <p style="text-align: center; margin-bottom: 20px; font-size: 1.4rem;">
+                    <b>Lista de Referencias de Juegos</b>
+                </p>
+
+                <p style="font-size: 1rem; text-align: center; margin-bottom: 15px;">
+                    <i>Los siguientes juegos son homenajes realizados con fines educativos y de entretenimiento. Todos los derechos de las obras originales pertenecen a sus respectivos dueños:</i>
+                </p>
+
+                <div class="apa-style">
+                    Bandai Namco Entertainment. (1980). <i>Pac-Man</i> [Videojuego].
+                </div>
+
+                <div class="apa-style">
+                    The Tetris Company. (1984). <i>Tetris</i> [Videojuego].
+                </div>
+
+                <div class="apa-style">
+                    .GEARS Studios. (2013). <i>Flappy Bird</i> [Aplicación móvil].
+                </div>
+
+                <div class="apa-style">
+                    Atari Interactive. (1972). <i>Pong</i> [Videojuego].
+                </div>
+
+                <div class="apa-style">
+                    Milton Bradley (Hasbro). (1978). <i>Simon</i> [Juego electrónico].
+                </div>
+
+                <div class="apa-style">
+                    Tradicional. (s.f.). <i>Ahorcado</i> [Juego de lápiz y papel]. Dominio Público.
+                </div>
+
+                <hr style="border: 1px dashed #ff69b4; margin: 20px 0;">
+
+                <p style="text-align: center; font-size: 1rem;">
+                    <i>Sitio Web y Adaptaciones © 2026 Vini's World.<br>
+                    Diseñado con <i class="fas fa-heart"></i> y polvo de estrellas.</i>
+                </p>
+            </div>
+        </div>
+    
+    <style>
+    /* Estilos base para que se vea bien si lo pruebas solo */
+    .window {
+        background: #ffffff;
+        border: 2px solid #ff69b4;
+        box-shadow: 6px 6px 0px rgba(255, 105, 180, 0.4);
+        margin-bottom: 25px;
+        position: relative;
+        font-family: 'VT323', monospace;
+        max-width: 600px;
+        margin: 20px auto;
+    }
+
+    .window-header {
+        background: linear-gradient(to right, #ff69b4, #ffb6c1);
+        color: white;
+        padding: 5px 10px;
+        font-size: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #ff69b4;
+    }
+
+    .window-body {
+        padding: 20px;
+        color: #d63384;
+        font-size: 1.3rem;
+        text-align: center;
+    }
+
+    /* === CSS ESPECÍFICO DEL PAINT === */
+    .paint-toolbar {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+    }
+
+    .paint-canvas {
+        background-color: #ffffff;
+        border: 4px solid #ff69b4;
+        cursor: crosshair;
+        touch-action: none; /* Importante para dibujar en celular */
+        box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .color-btn {
+        width: 25px; height: 25px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+        transition: transform 0.1s;
+    }
+    .color-btn:hover { transform: scale(1.2); }
+    .color-btn.active { border: 2px solid #000; }
+
+    .tool-btn {
+        background: #ffccdd;
+        border: 2px solid #ff69b4;
+        color: #d63384;
+        padding: 5px 10px;
+        font-family: 'VT323', monospace;
+        cursor: pointer;
+        font-weight: bold;
+        box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+    }
+    .tool-btn:hover { background: #ff69b4; color: white; }
+    .tool-btn:active { transform: translate(1px, 1px); box-shadow: none; }
+</style>
+
+<div class="window">
+    <div class="window-header">
+        <span>★ VINI'S ART STUDIO ★</span>
+        <div class="window-controls"><span></span><span></span></div>
+    </div>
+    <div class="window-body">
+        <p>¡Dibuja tu propio cielo!</p>
+        
+        <div class="paint-toolbar">
+            <button class="tool-btn" onclick="setTool('pencil')">✏️ Lápiz</button>
+            <button class="tool-btn" onclick="setTool('eraser')">🧼 Goma</button>
+            <button class="tool-btn" onclick="clearCanvas()">🗑️ Limpiar</button>
+        </div>
+
+        <div class="paint-toolbar" style="margin-top:5px;">
+            <div class="color-btn" style="background:#000000;" onclick="setColor('#000000')" title="Negro"></div>
+            <div class="color-btn" style="background:#555555;" onclick="setColor('#555555')" title="Gris Oscuro"></div>
+            <div class="color-btn" style="background:#ffffff;" onclick="setColor('#ffffff')" title="Blanco"></div>
+            
+            <div class="color-btn" style="background:#ff0000;" onclick="setColor('#ff0000')" title="Rojo"></div>
+            <div class="color-btn" style="background:#ff4500;" onclick="setColor('#ff4500')" title="Naranja"></div>
+            <div class="color-btn" style="background:#ffd700;" onclick="setColor('#ffd700')" title="Dorado"></div>
+            <div class="color-btn" style="background:#ffff00;" onclick="setColor('#ffff00')" title="Amarillo"></div>
+            <div class="color-btn" style="background:#8b4513;" onclick="setColor('#8b4513')" title="Marrón"></div>
+            <div class="color-btn" style="background:#d2b48c;" onclick="setColor('#d2b48c')" title="Piel/Arena"></div>
+
+            <div class="color-btn" style="background:#006400;" onclick="setColor('#006400')" title="Verde Oscuro"></div>
+            <div class="color-btn" style="background:#32cd32;" onclick="setColor('#32cd32')" title="Verde Lima"></div>
+            <div class="color-btn" style="background:#00ced1;" onclick="setColor('#00ced1')" title="Turquesa"></div>
+            <div class="color-btn" style="background:#1e90ff;" onclick="setColor('#1e90ff')" title="Azul Cielo"></div>
+            <div class="color-btn" style="background:#0000ff;" onclick="setColor('#0000ff')" title="Azul"></div>
+            
+            <div class="color-btn" style="background:#8a2be2;" onclick="setColor('#8a2be2')" title="Violeta"></div>
+            <div class="color-btn" style="background:#ff69b4;" onclick="setColor('#ff69b4')" title="Hot Pink"></div>
+            <div class="color-btn" style="background:#ffb6c1;" onclick="setColor('#ffb6c1')" title="Rosa Pastel"></div>
+        </div>
+
+        <canvas id="artCanvas" class="paint-canvas" width="500" height="300"></canvas>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('artCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    let painting = false;
+    let currentColor = '#000000';
+    let currentTool = 'pencil'; // pencil o eraser
+    
+    // Configuración inicial de línea
+    ctx.lineWidth = 3;
+    ctx.lineCap = 'round';
+
+    // Funciones de control
+    function setColor(color) {
+        currentColor = color;
+        currentTool = 'pencil';
+    }
+
+    function setTool(tool) {
+        currentTool = tool;
+    }
+
+    function clearCanvas() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function startPosition(e) {
+        painting = true;
+        draw(e);
+    }
+
+    function endPosition() {
+        painting = false;
+        ctx.beginPath();
+    }
+
+    function draw(e) {
+        if (!painting) return;
+
+        e.preventDefault(); // Evita scroll en celular
+
+        // Obtener posición del mouse o toque
+        const rect = canvas.getBoundingClientRect();
+        let x, y;
+
+        if (e.touches) {
+            x = e.touches[0].clientX - rect.left;
+            y = e.touches[0].clientY - rect.top;
+        } else {
+            x = e.clientX - rect.left;
+            y = e.clientY - rect.top;
+        }
+
+        // Lógica de herramienta
+        if (currentTool === 'eraser') {
+            ctx.strokeStyle = '#ffffff'; // Pinta blanco para borrar
+            ctx.lineWidth = 15;
+        } else {
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = 3;
+        }
+
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+    }
+
+    // Event Listeners (Mouse)
+    canvas.addEventListener('mousedown', startPosition);
+    canvas.addEventListener('mouseup', endPosition);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseleave', endPosition);
+
+    // Event Listeners (Touch / Celular)
+    canvas.addEventListener('touchstart', startPosition);
+    canvas.addEventListener('touchend', endPosition);
+    canvas.addEventListener('touchmove', draw);
+</script>
+</body>
+</html>

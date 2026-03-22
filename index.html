@@ -20,6 +20,7 @@
         }
         body {
             font-family: 'VT323', 'Segoe UI', monospace;
+            background: #4a7ba7 url('https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/fondo_frutiger.png') center/cover fixed no-repeat;
             color: #333333;
             padding: 8px;
             min-height: 100vh;
@@ -28,31 +29,25 @@
             overflow-y: auto;
             font-weight: bold;
             font-style: italic;
-            background: #4a7ba7; /* respaldo si video falla */
         }
-
-        /* VIDEO DE FONDO – cubre absolutamente todo */
-        #bg-video {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            transform: translate(-50%, -50%);
-            z-index: -10;
-            object-fit: cover;
-            background: #4a7ba7;
-        }
-
-        /* Overlay sutil para mejorar legibilidad si el video es muy claro */
-        .overlay {
+        body::before {
+            content: '';
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.08);
-            z-index: -9;
+            background: linear-gradient(180deg, #4a7ba7 0%, #6eb4d6 70%, #8cc5e1 100%);
+            z-index: -2;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(255,255,255,0.08), transparent 40%),
+                radial-gradient(ellipse at 80% 70%, rgba(0,0,0,0.05), transparent 50%),
+                linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.03) 50%);
+            background-size: 100% 100%, 100% 100%, 100% 4px;
             pointer-events: none;
+            z-index: -1;
         }
 
         .container {
@@ -284,15 +279,18 @@
             justify-content: center;
             gap: 16px;
             padding: 8px 0;
-            align-items: flex-end;
         }
-        .artifact-label {
-            display: block;
-            margin-top: 6px;
-            font-size: 0.85rem;
-            color: #0072c6;
-            font-weight: 700;
-            text-align: center;
+        .retro-img {
+            width: 220px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.4);
+        }
+        .retro-img:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 20px rgba(0, 114, 198, 0.5);
         }
 
         .paint-toolbar {
@@ -363,19 +361,13 @@
             .paint-canvas { width: 100%; height: 250px; }
             .profile-pic { width: 90px; }
             .sticker-fantasma { max-width: 180px !important; }
+            .retro-img { width: 160px; }
         }
     </style>
 </head>
 <body>
 
-    <video id="bg-video" autoplay loop muted playsinline>
-        <source src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Fondo.mp4" type="video/mp4">
-        Tu navegador no soporta video como fondo.
-    </video>
-
-    <div class="overlay"></div>
-
-    <!-- Stickers -->
+    <!-- Stickers angel -->
     <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel2.gif" class="sticker-fantasma" style="top: 20px; left: -20px; transform: rotate(-15deg); width: 250px;">
     <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel6.jpg" class="sticker-fantasma" style="top: 180px; left: 80px; transform: rotate(5deg); width: 220px;">
     <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel9.jpg" class="sticker-fantasma" style="top: 350px; left: 0px; transform: rotate(-10deg); width: 260px;">
@@ -436,6 +428,7 @@
             </div>
             <div class="window-body">
                 <p style="margin-bottom: 12px; font-weight: 600;">El cielo no es para cualquiera. ¿Te atreves a subir?</p>
+              
                 <div class="social-flex-container">
                     <a href="https://discord.gg/EN4zwvT86f" target="_blank" rel="noopener noreferrer" class="cute-btn-social" title="Discord">
                         <i class="fa-brands fa-discord"></i>
@@ -464,6 +457,7 @@
             </div>
             <div class="window-body">
                 <p style="margin-bottom: 10px; font-weight: 600;">¡Elige tu juego favorito y diviértete!</p>
+              
                 <div class="games-grid">
                     <a href="pacman.html" class="game-btn">
                         <i class="fas fa-ghost"></i>
@@ -503,10 +497,17 @@
                 </div>
             </div>
             <div class="window-body">
-                <p style="margin-bottom: 12px; font-weight: 600;">Mi colección de tesoros:</p>
+                <p style="margin-bottom: 12px; font-weight: 600;">Mi colección de tesoros retro:</p>
+              
                 <div class="artifacts-grid">
-                    <!-- Aquí puedes agregar tus mini-consolas como GameBoy, GBA, etc. si las tenías -->
-                    <!-- Ejemplo: <div class="gameboy-css"> ... </div> -->
+                    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/retro1.jpg" class="retro-img" alt="Retro 1">
+                    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/retro2.jpg" class="retro-img" alt="Retro 2">
+                    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/retro3.jpg" class="retro-img" alt="Retro 3">
+                    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/retro4.jpg" class="retro-img" alt="Retro 4">
+                    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/retro5.jpg" class="retro-img" alt="Retro 5">
+                    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/retro6.jpg" class="retro-img" alt="Retro 6">
+                    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/retro7.jpg" class="retro-img" alt="Retro 7">
+                    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/retro8.jpg" class="retro-img" alt="Retro 8">
                 </div>
             </div>
         </div>
@@ -522,6 +523,7 @@
             </div>
             <div class="window-body">
                 <p style="margin-bottom: 10px; font-weight: 600;">¡Dibuja tu propio cielo!</p>
+              
                 <div class="paint-toolbar">
                     <button class="tool-btn" onclick="setTool('pencil')">✏️ Lápiz</button>
                     <button class="tool-btn" onclick="setTool('eraser')">🧼 Goma</button>
@@ -585,19 +587,20 @@
     </div>
 
     <script>
-        // Contador de visitas
+        // VISITOR COUNTER
         let visits = localStorage.getItem('vini_visits_frutiger_complete');
         if (!visits) { visits = 1; } else { visits = parseInt(visits) + 1; }
         localStorage.setItem('vini_visits_frutiger_complete', visits);
         document.getElementById('visit-count').innerText = visits.toString().padStart(6, '0');
 
-        // Pintura en canvas
+        // PAINT CANVAS
         const canvas = document.getElementById('artCanvas');
         const ctx = canvas.getContext('2d');
+      
         let painting = false;
         let currentColor = '#000000';
         let currentTool = 'pencil';
-
+      
         ctx.lineWidth = 3;
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
@@ -629,12 +632,21 @@
             if (!painting) return;
             e.preventDefault();
             const rect = canvas.getBoundingClientRect();
-            let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
-            let y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
-
-            ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : currentColor;
-            ctx.lineWidth = currentTool === 'eraser' ? 15 : 3;
-
+            let x, y;
+            if (e.touches) {
+                x = e.touches[0].clientX - rect.left;
+                y = e.touches[0].clientY - rect.top;
+            } else {
+                x = e.clientX - rect.left;
+                y = e.clientY - rect.top;
+            }
+            if (currentTool === 'eraser') {
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = 15;
+            } else {
+                ctx.strokeStyle = currentColor;
+                ctx.lineWidth = 3;
+            }
             ctx.lineTo(x, y);
             ctx.stroke();
             ctx.beginPath();

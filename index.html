@@ -9,134 +9,360 @@
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
   
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         html, body {
-            width:100%; height:100%; margin:0; padding:0; overflow-x:hidden;
+            width: 100%;
+            height: 100%;
         }
         body {
-            font-family:'VT323','Segoe UI',monospace;
-            color:#333;
-            min-height:100vh;
-            position:relative;
-            font-weight:bold;
-            font-style:italic;
-            background:#4a7ba7; /* respaldo mientras carga video */
+            font-family: 'VT323', 'Segoe UI', monospace;
+            color: #333333;
+            padding: 8px;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-weight: bold;
+            font-style: italic;
+            background: #4a7ba7; /* respaldo si video falla */
         }
 
-        /* VIDEO FONDO – cubre TODA la pantalla sin huecos */
+        /* VIDEO DE FONDO – cubre absolutamente todo */
         #bg-video {
-            position:fixed;
-            top:50%; left:50%;
-            min-width:100%; min-height:100%;
-            width:auto; height:auto;
-            transform:translate(-50%,-50%);
-            z-index:-10;
-            object-fit:cover;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            z-index: -10;
+            object-fit: cover;
+            background: #4a7ba7;
         }
 
-        /* Overlay sutil para que texto se lea mejor (ajusta opacidad si quieres) */
+        /* Overlay sutil para mejorar legibilidad si el video es muy claro */
         .overlay {
-            position:fixed; inset:0;
-            background:rgba(0,0,0,0.12);
-            z-index:-9; pointer-events:none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.08);
+            z-index: -9;
+            pointer-events: none;
         }
 
         .container {
-            max-width:900px; margin:0 auto;
-            position:relative; z-index:10;
-            padding:8px;
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
         }
 
         .sticker-fantasma {
-            position:absolute; z-index:5;
-            opacity:0.7; border-radius:6px;
-            filter:sepia(0.2) hue-rotate(200deg) saturate(0.9) contrast(1.02) brightness(1.05);
-            transition:all 0.4s ease;
-            box-shadow:2px 2px 12px rgba(0,114,198,0.15);
-            max-width:280px; height:auto;
+            position: absolute;
+            z-index: 1;
+            opacity: 0.7;
+            border-radius: 6px;
+            filter: sepia(0.2) hue-rotate(200deg) saturate(0.9) contrast(1.02) brightness(1.05);
+            transition: all 0.4s ease;
+            box-shadow: 2px 2px 12px rgba(0, 114, 198, 0.15);
+            max-width: 280px;
+            height: auto;
         }
         .sticker-fantasma:hover {
-            opacity:1; transform:scale(1.08) rotate(0deg)!important;
-            filter:none; z-index:100; cursor:pointer;
-            box-shadow:0 0 20px rgba(0,114,198,0.4);
-            border:2px solid rgba(255,255,255,0.6);
+            opacity: 1;
+            transform: scale(1.08) rotate(0deg) !important;
+            filter: none;
+            z-index: 100;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 114, 198, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.6);
         }
 
-        ::-webkit-scrollbar { width:15px; }
-        ::-webkit-scrollbar-track { background:rgba(255,255,255,0.2); }
-        ::-webkit-scrollbar-thumb { background:rgba(0,114,198,0.6); border:2px solid rgba(255,255,255,0.8); border-radius:8px; }
+        ::-webkit-scrollbar { width: 15px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.2); }
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 114, 198, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 8px;
+        }
 
         .top-bar {
-            display:flex; justify-content:space-between; align-items:center;
-            background:linear-gradient(180deg,#0072c6 0%,#005fa6 100%);
-            border:2px solid rgba(255,255,255,0.9); border-radius:6px; color:white;
-            font-size:1.3rem; margin-bottom:12px;
-            box-shadow:0 4px 12px rgba(0,114,198,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
-            padding:8px 15px; height:48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, #0072c6 0%, #005fa6 100%);
+            border: 2px solid rgba(255, 255, 255, 0.9);
+            border-radius: 6px;
+            color: white;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(0, 114, 198, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            padding: 8px 15px;
+            height: 48px;
         }
+        .marquee-container { display: flex; align-items: center; }
         .vinis-logo-animated {
-            font-family:'VT323',monospace; font-weight:bold; font-size:1.8rem; white-space:nowrap;
-            background:linear-gradient(to right,#ffffff 0%,#ffffff 45%,#00bfff 50%,#ffffff 55%,#ffffff 100%);
-            background-size:200% auto; -webkit-background-clip:text; background-clip:text;
-            -webkit-text-fill-color:transparent; animation:blueShine 3s linear infinite reverse;
+            font-family: 'VT323', monospace;
+            font-weight: bold;
+            font-size: 1.8rem;
+            white-space: nowrap;
+            background: linear-gradient(to right, #ffffff 0%, #ffffff 45%, #00bfff 50%, #ffffff 55%, #ffffff 100%);
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: blueShine 3s linear infinite reverse;
         }
-        @keyframes blueShine { to { background-position:200% center; } }
-        .visitor-counter { white-space:nowrap; font-weight:bold; font-size:0.95rem; text-shadow:0 1px 2px rgba(0,0,0,0.3); }
+        @keyframes blueShine { to { background-position: 200% center; } }
+        .visitor-counter {
+            white-space: nowrap;
+            font-weight: bold;
+            font-size: 0.95rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
 
         .window {
-            background:linear-gradient(180deg,rgba(255,255,255,0.97) 0%,rgba(248,250,252,0.96) 40%,rgba(240,245,250,0.95) 100%);
-            border:1px solid rgba(0,0,0,0.15); border-radius:4px;
-            box-shadow:0 2px 8px rgba(0,114,198,0.2), inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.5);
-            margin-bottom:12px; position:relative; font-size:1rem; overflow:hidden;
+            background: linear-gradient(180deg, rgba(255,255,255,0.97) 0%, rgba(248,250,252,0.96) 40%, rgba(240,245,250,0.95) 100%);
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 114, 198, 0.2), inset 0 1px 0 rgba(255,255,255,0.9), inset 1px 0 0 rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+            position: relative;
+            font-size: 1rem;
+            overflow: hidden;
         }
         .window-header {
-            background:linear-gradient(180deg,#0072c6 0%,#005fa6 100%); color:#fff;
-            padding:6px 10px; font-weight:700; font-size:1.1rem;
-            display:flex; justify-content:space-between; align-items:center;
-            text-shadow:0 1px 2px rgba(0,0,0,0.3); border-bottom:1px solid rgba(0,0,0,0.15);
-            box-shadow:inset 0 1px 0 rgba(255,255,255,0.15);
+            background: linear-gradient(180deg, #0072c6 0%, #005fa6 100%);
+            color: #ffffff;
+            padding: 6px 10px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(0,0,0,0.15);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
         }
-        .window-title { display:flex; align-items:center; gap:6px; }
-        .window-controls { display:flex; gap:4px; }
+        .window-title { display: flex; align-items: center; gap: 6px; }
+        .window-controls { display: flex; gap: 4px; }
         .btn-control {
-            width:20px; height:18px; background:linear-gradient(180deg,#1e8dff 0%,#0078d4 100%);
-            border:1px solid #004a99; border-radius:2px; font-size:9px; font-weight:bold;
-            display:flex; align-items:center; justify-content:center; color:#fff; cursor:pointer;
-            box-shadow:inset 0 1px 0 rgba(255,255,255,0.3),0 1px 2px rgba(0,0,0,0.15);
-            transition:all 0.15s;
+            width: 20px;
+            height: 18px;
+            background: linear-gradient(180deg, #1e8dff 0%, #0078d4 100%);
+            border: 1px solid #004a99;
+            border-radius: 2px;
+            font-size: 9px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.15);
+            transition: all 0.15s;
         }
-        .btn-control:hover { background:linear-gradient(180deg,#2a9aff 0%,#0084e6 100%); }
+        .btn-control:hover { background: linear-gradient(180deg, #2a9aff 0%, #0084e6 100%); }
 
         .window-body {
-            padding:12px;
-            background:linear-gradient(180deg,rgba(255,255,255,0.97),rgba(245,248,252,0.96));
-            color:#333; line-height:1.4; font-size:0.95rem;
+            padding: 12px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(245,248,252,0.96));
+            color: #333333;
+            line-height: 1.4;
+            font-size: 0.95rem;
         }
 
         .profile-pic {
-            float:left; margin-right:12px; margin-bottom:8px; width:100px;
-            border-radius:4px; box-shadow:0 3px 8px rgba(0,114,198,0.2), inset 0 0 0 1px rgba(255,255,255,0.6);
-            border:1px solid rgba(0,0,0,0.1); transition:all 0.3s;
+            float: left;
+            margin-right: 12px;
+            margin-bottom: 8px;
+            width: 100px;
+            border-radius: 4px;
+            box-shadow: 0 3px 8px rgba(0, 114, 198, 0.2), inset 0 0 0 1px rgba(255,255,255,0.6);
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.3s;
         }
-        .profile-pic:hover { transform:scale(1.05); box-shadow:0 5px 15px rgba(0,114,198,0.3); }
+        .profile-pic:hover {
+            box-shadow: 0 5px 15px rgba(0, 114, 198, 0.3), inset 0 0 0 1px rgba(255,255,255,0.6);
+            transform: scale(1.05);
+        }
 
-        /* Botones, social, games-grid, artifacts-grid, paint, etc. – mantengo lo esencial */
-        button, .btn-aero { /* tus estilos originales */ }
-        .social-flex-container { /* ... */ }
-        .cute-btn-social { /* ... */ }
-        .games-grid { /* ... */ }
-        .game-btn { /* ... */ }
-        .artifacts-grid { /* ... */ }
-        .paint-toolbar { /* ... */ }
-        .paint-canvas { /* ... */ }
-        .apa-style { /* ... */ }
+        button, .btn-aero {
+            background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 50%, #e8e8e8 100%);
+            border: 1px solid #bfbfbf;
+            border-radius: 3px;
+            padding: 4px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #333333;
+            font-family: 'VT323', monospace;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.15s;
+        }
+        button:hover, .btn-aero:hover {
+            background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 50%, #ebebeb 100%);
+            border: 1px solid #a0a0a0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.9);
+        }
 
-        @media (max-width:700px) {
-            .window { margin-bottom:10px; }
-            .games-grid { grid-template-columns:repeat(2,1fr); }
-            .paint-canvas { width:100%; height:250px; }
-            .profile-pic { width:90px; }
-            .sticker-fantasma { max-width:180px !important; }
+        .social-flex-container {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            padding: 10px;
+            flex-wrap: wrap;
+        }
+        .cute-btn-social {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 100%);
+            border: 1px solid #b8b8b8;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            font-size: 22px;
+            color: #0072c6;
+            box-shadow: 0 2px 6px rgba(0, 114, 198, 0.15), inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.2s;
+        }
+        .cute-btn-social:hover {
+            background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+            border: 1px solid #a0a0a0;
+            box-shadow: 0 3px 10px rgba(0, 114, 198, 0.25), inset 0 1px 0 rgba(255,255,255,0.9);
+            transform: translateY(-2px);
+            animation: temblor 0.3s infinite;
+        }
+        @keyframes temblor {
+            0%, 100% { transform: translateY(-2px) rotate(0deg); }
+            25% { transform: translateY(-2px) rotate(2deg); }
+            75% { transform: translateY(-2px) rotate(-2deg); }
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .game-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #fafafa 0%, #f2f2f2 100%);
+            border: 1px solid #c0c0c0;
+            padding: 10px;
+            text-decoration: none;
+            color: #0072c6;
+            font-family: 'VT323', monospace;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.2s;
+            min-height: 75px;
+        }
+        .game-btn:hover {
+            background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+            border: 1px solid #a8a8a8;
+            box-shadow: 0 2px 6px rgba(0, 114, 198, 0.2), inset 0 1px 0 rgba(255,255,255,0.9);
+            transform: translateY(-1px);
+        }
+        .game-btn i { font-size: 24px; margin-bottom: 4px; }
+
+        .artifacts-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            padding: 8px 0;
+            align-items: flex-end;
+        }
+        .artifact-label {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: #0072c6;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .paint-toolbar {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .paint-canvas {
+            background-color: #ffffff;
+            border: 1px solid #b8b8b8;
+            border-radius: 3px;
+            cursor: crosshair;
+            touch-action: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+        }
+        .color-btn {
+            width: 26px;
+            height: 26px;
+            border: 1px solid #b0b0b0;
+            border-radius: 2px;
+            cursor: pointer;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.7);
+            transition: all 0.15s;
+        }
+        .color-btn:hover {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.8);
+            transform: scale(1.05);
+        }
+        .tool-btn {
+            background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 100%);
+            border: 1px solid #bfbfbf;
+            color: #333333;
+            padding: 4px 10px;
+            font-family: 'VT323', monospace;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 3px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.15s;
+        }
+        .tool-btn:hover {
+            background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.9);
+        }
+
+        .apa-style {
+            background: linear-gradient(180deg, #f5f5f5, #efefef);
+            padding: 8px;
+            margin: 6px 0;
+            border-left: 3px solid #0072c6;
+            border-radius: 2px;
+            font-size: 0.85rem;
+            font-style: italic;
+            color: #333333;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+        }
+
+        @media (max-width: 700px) {
+            .window { margin-bottom: 10px; }
+            .games-grid { grid-template-columns: repeat(2, 1fr); }
+            .artifacts-grid { gap: 12px; }
+            .paint-canvas { width: 100%; height: 250px; }
+            .profile-pic { width: 90px; }
+            .sticker-fantasma { max-width: 180px !important; }
         }
     </style>
 </head>
@@ -144,31 +370,31 @@
 
     <video id="bg-video" autoplay loop muted playsinline>
         <source src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Fondo.mp4" type="video/mp4">
-        Tu navegador no soporta video de fondo.
+        Tu navegador no soporta video como fondo.
     </video>
 
     <div class="overlay"></div>
 
     <!-- Stickers -->
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel2.gif" class="sticker-fantasma" style="top:20px;left:-20px;transform:rotate(-15deg);width:250px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel6.jpg" class="sticker-fantasma" style="top:180px;left:80px;transform:rotate(5deg);width:220px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel9.jpg" class="sticker-fantasma" style="top:350px;left:0px;transform:rotate(-10deg);width:260px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel4.png" class="sticker-fantasma" style="top:550px;left:100px;transform:rotate(12deg);width:200px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel11.jpg" class="sticker-fantasma" style="top:700px;left:-30px;transform:rotate(-20deg);width:280px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel13.jpg" class="sticker-fantasma" style="top:950px;left:60px;transform:rotate(8deg);width:240px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel15.jpg" class="sticker-fantasma" style="top:1150px;left:10px;transform:rotate(-5deg);width:210px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel19.jpg" class="sticker-fantasma" style="top:1300px;left:90px;transform:rotate(15deg);width:190px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel21.gif" class="sticker-fantasma" style="top:1500px;left:-10px;transform:rotate(-10deg);width:230px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel3.gif" class="sticker-fantasma" style="top:40px;right:-10px;transform:rotate(10deg);width:240px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel5.jpg" class="sticker-fantasma" style="top:220px;right:90px;transform:rotate(-8deg);width:210px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel7.jpg" class="sticker-fantasma" style="top:400px;right:10px;transform:rotate(5deg);width:270px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel10.jpg" class="sticker-fantasma" style="top:600px;right:110px;transform:rotate(-12deg);width:180px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel12.jpg" class="sticker-fantasma" style="top:750px;right:-20px;transform:rotate(18deg);width:260px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel14.jpg" class="sticker-fantasma" style="top:1000px;right:70px;transform:rotate(-6deg);width:230px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel16.jpg" class="sticker-fantasma" style="top:1200px;right:20px;transform:rotate(9deg);width:200px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel17.jpg" class="sticker-fantasma" style="top:1350px;right:100px;transform:rotate(-15deg);width:220px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel18.jpg" class="sticker-fantasma" style="top:1550px;right:0px;transform:rotate(7deg);width:250px;">
-    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel20.jpg" class="sticker-fantasma" style="top:1700px;right:60px;transform:rotate(-9deg);width:190px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel2.gif" class="sticker-fantasma" style="top: 20px; left: -20px; transform: rotate(-15deg); width: 250px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel6.jpg" class="sticker-fantasma" style="top: 180px; left: 80px; transform: rotate(5deg); width: 220px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel9.jpg" class="sticker-fantasma" style="top: 350px; left: 0px; transform: rotate(-10deg); width: 260px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel4.png" class="sticker-fantasma" style="top: 550px; left: 100px; transform: rotate(12deg); width: 200px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel11.jpg" class="sticker-fantasma" style="top: 700px; left: -30px; transform: rotate(-20deg); width: 280px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel13.jpg" class="sticker-fantasma" style="top: 950px; left: 60px; transform: rotate(8deg); width: 240px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel15.jpg" class="sticker-fantasma" style="top: 1150px; left: 10px; transform: rotate(-5deg); width: 210px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel19.jpg" class="sticker-fantasma" style="top: 1300px; left: 90px; transform: rotate(15deg); width: 190px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel21.gif" class="sticker-fantasma" style="top: 1500px; left: -10px; transform: rotate(-10deg); width: 230px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel3.gif" class="sticker-fantasma" style="top: 40px; right: -10px; transform: rotate(10deg); width: 240px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel5.jpg" class="sticker-fantasma" style="top: 220px; right: 90px; transform: rotate(-8deg); width: 210px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel7.jpg" class="sticker-fantasma" style="top: 400px; right: 10px; transform: rotate(5deg); width: 270px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel10.jpg" class="sticker-fantasma" style="top: 600px; right: 110px; transform: rotate(-12deg); width: 180px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel12.jpg" class="sticker-fantasma" style="top: 750px; right: -20px; transform: rotate(18deg); width: 260px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel14.jpg" class="sticker-fantasma" style="top: 1000px; right: 70px; transform: rotate(-6deg); width: 230px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel16.jpg" class="sticker-fantasma" style="top: 1200px; right: 20px; transform: rotate(9deg); width: 200px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel17.jpg" class="sticker-fantasma" style="top: 1350px; right: 100px; transform: rotate(-15deg); width: 220px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel18.jpg" class="sticker-fantasma" style="top: 1550px; right: 0px; transform: rotate(7deg); width: 250px;">
+    <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Angel20.jpg" class="sticker-fantasma" style="top: 1700px; right: 60px; transform: rotate(-9deg); width: 190px;">
 
     <div class="container">
 
@@ -180,8 +406,13 @@
         </div>
 
         <div class="window">
-            <div class="window-header"><div class="window-title"><span>💫 Vini's Lore</span></div>
-                <div class="window-controls"><button class="btn-control">_</button><button class="btn-control">□</button><button class="btn-control">✕</button></div>
+            <div class="window-header">
+                <div class="window-title"><span>💫 Vini's Lore</span></div>
+                <div class="window-controls">
+                    <button class="btn-control">_</button>
+                    <button class="btn-control">□</button>
+                    <button class="btn-control">✕</button>
+                </div>
             </div>
             <div class="window-body">
                 <img src="https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/Chica_Angel_1.gif" alt="Chica Ángel" class="profile-pic">
@@ -195,93 +426,158 @@
         </div>
 
         <div class="window">
-            <div class="window-header"><div class="window-title"><span>⭐ Asciende Conmigo Al Cielo</span></div>
-                <div class="window-controls"><button class="btn-control">_</button><button class="btn-control">□</button><button class="btn-control">✕</button></div>
+            <div class="window-header">
+                <div class="window-title"><span>⭐ Asciende Conmigo Al Cielo</span></div>
+                <div class="window-controls">
+                    <button class="btn-control">_</button>
+                    <button class="btn-control">□</button>
+                    <button class="btn-control">✕</button>
+                </div>
             </div>
             <div class="window-body">
-                <p style="margin-bottom:12px;font-weight:600;">El cielo no es para cualquiera. ¿Te atreves a subir?</p>
+                <p style="margin-bottom: 12px; font-weight: 600;">El cielo no es para cualquiera. ¿Te atreves a subir?</p>
                 <div class="social-flex-container">
-                    <a href="https://discord.gg/EN4zwvT86f" target="_blank" class="cute-btn-social" title="Discord"><i class="fa-brands fa-discord"></i></a>
-                    <a href="https://x.com/Artemisarium" target="_blank" class="cute-btn-social" title="X"><i class="fa-brands fa-twitter"></i></a>
-                    <a href="https://www.tiktok.com/@vinilica_bonefish" target="_blank" class="cute-btn-social" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
-                    <a href="https://facebook.com/groups/1422337012932125/" target="_blank" class="cute-btn-social" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="https://discord.gg/EN4zwvT86f" target="_blank" rel="noopener noreferrer" class="cute-btn-social" title="Discord">
+                        <i class="fa-brands fa-discord"></i>
+                    </a>
+                    <a href="https://x.com/Artemisarium" target="_blank" rel="noopener noreferrer" class="cute-btn-social" title="X">
+                        <i class="fa-brands fa-twitter"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@vinilica_bonefish" target="_blank" rel="noopener noreferrer" class="cute-btn-social" title="TikTok">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+                    <a href="https://facebook.com/groups/1422337012932125/" target="_blank" rel="noopener noreferrer" class="cute-btn-social" title="Facebook">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="window">
-            <div class="window-header"><div class="window-title"><span>🎮 ARCADE ROOM</span></div>
-                <div class="window-controls"><button class="btn-control">_</button><button class="btn-control">□</button><button class="btn-control">✕</button></div>
+            <div class="window-header">
+                <div class="window-title"><span>🎮 ARCADE ROOM</span></div>
+                <div class="window-controls">
+                    <button class="btn-control">_</button>
+                    <button class="btn-control">□</button>
+                    <button class="btn-control">✕</button>
+                </div>
             </div>
             <div class="window-body">
-                <p style="margin-bottom:10px;font-weight:600;">¡Elige tu juego favorito y diviértete!</p>
+                <p style="margin-bottom: 10px; font-weight: 600;">¡Elige tu juego favorito y diviértete!</p>
                 <div class="games-grid">
-                    <a href="pacman.html" class="game-btn"><i class="fas fa-ghost"></i><span>PACMAN</span></a>
-                    <a href="tetris.html" class="game-btn"><i class="fas fa-cubes"></i><span>TETRIS</span></a>
-                    <a href="flappybird.html" class="game-btn"><i class="fas fa-dove"></i><span>FLAPPY</span></a>
-                    <a href="pingpong.html" class="game-btn"><i class="fas fa-table-tennis-paddle-ball"></i><span>PING PONG</span></a>
-                    <a href="copycat.html" class="game-btn"><i class="fas fa-lightbulb"></i><span>COPYCAT</span></a>
-                    <a href="ahorcado.html" class="game-btn"><i class="fas fa-pencil"></i><span>AHORCADO</span></a>
+                    <a href="pacman.html" class="game-btn">
+                        <i class="fas fa-ghost"></i>
+                        <span>PACMAN</span>
+                    </a>
+                    <a href="tetris.html" class="game-btn">
+                        <i class="fas fa-cubes"></i>
+                        <span>TETRIS</span>
+                    </a>
+                    <a href="flappybird.html" class="game-btn">
+                        <i class="fas fa-dove"></i>
+                        <span>FLAPPY</span>
+                    </a>
+                    <a href="pingpong.html" class="game-btn">
+                        <i class="fas fa-table-tennis-paddle-ball"></i>
+                        <span>PING PONG</span>
+                    </a>
+                    <a href="copycat.html" class="game-btn">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>COPYCAT</span>
+                    </a>
+                    <a href="ahorcado.html" class="game-btn">
+                        <i class="fas fa-pencil"></i>
+                        <span>AHORCADO</span>
+                    </a>
                 </div>
             </div>
         </div>
 
         <div class="window">
-            <div class="window-header"><div class="window-title"><span>⏰ Artefactos Retro</span></div>
-                <div class="window-controls"><button class="btn-control">_</button><button class="btn-control">□</button><button class="btn-control">✕</button></div>
+            <div class="window-header">
+                <div class="window-title"><span>⏰ Artefactos Retro</span></div>
+                <div class="window-controls">
+                    <button class="btn-control">_</button>
+                    <button class="btn-control">□</button>
+                    <button class="btn-control">✕</button>
+                </div>
             </div>
             <div class="window-body">
-                <p style="margin-bottom:12px;font-weight:600;">Mi colección de tesoros:</p>
+                <p style="margin-bottom: 12px; font-weight: 600;">Mi colección de tesoros:</p>
                 <div class="artifacts-grid">
-                    <!-- Agrega aquí tus divs de GameBoy, GBA, NES, teléfono como en tu versión anterior -->
-                    <!-- Ejemplo: <div><div class="gameboy-css">...</div><span class="artifact-label">Classic</span></div> -->
+                    <!-- Aquí puedes agregar tus mini-consolas como GameBoy, GBA, etc. si las tenías -->
+                    <!-- Ejemplo: <div class="gameboy-css"> ... </div> -->
                 </div>
             </div>
         </div>
 
         <div class="window">
-            <div class="window-header"><div class="window-title"><span>🎨 VINI'S ART STUDIO</span></div>
-                <div class="window-controls"><button class="btn-control">_</button><button class="btn-control">□</button><button class="btn-control">✕</button></div>
+            <div class="window-header">
+                <div class="window-title"><span>🎨 VINI'S ART STUDIO</span></div>
+                <div class="window-controls">
+                    <button class="btn-control">_</button>
+                    <button class="btn-control">□</button>
+                    <button class="btn-control">✕</button>
+                </div>
             </div>
             <div class="window-body">
-                <p style="margin-bottom:10px;font-weight:600;">¡Dibuja tu propio cielo!</p>
+                <p style="margin-bottom: 10px; font-weight: 600;">¡Dibuja tu propio cielo!</p>
                 <div class="paint-toolbar">
                     <button class="tool-btn" onclick="setTool('pencil')">✏️ Lápiz</button>
                     <button class="tool-btn" onclick="setTool('eraser')">🧼 Goma</button>
                     <button class="tool-btn" onclick="clearCanvas()">🗑️ Limpiar</button>
                 </div>
-                <div class="paint-toolbar" style="margin-top:6px;">
-                    <div class="color-btn" style="background:#000000;" onclick="setColor('#000000')"></div>
-                    <div class="color-btn" style="background:#666666;" onclick="setColor('#666666')"></div>
-                    <div class="color-btn" style="background:#ff0000;" onclick="setColor('#ff0000')"></div>
-                    <div class="color-btn" style="background:#ff6600;" onclick="setColor('#ff6600')"></div>
-                    <div class="color-btn" style="background:#ffcc00;" onclick="setColor('#ffcc00')"></div>
-                    <div class="color-btn" style="background:#00cc00;" onclick="setColor('#00cc00')"></div>
-                    <div class="color-btn" style="background:#0066ff;" onclick="setColor('#0066ff')"></div>
-                    <div class="color-btn" style="background:#7700ff;" onclick="setColor('#7700ff')"></div>
-                    <div class="color-btn" style="background:#ff0099;" onclick="setColor('#ff0099')"></div>
+                <div class="paint-toolbar" style="margin-top: 6px;">
+                    <div class="color-btn" style="background:#000000;" onclick="setColor('#000000')" title="Negro"></div>
+                    <div class="color-btn" style="background:#666666;" onclick="setColor('#666666')" title="Gris"></div>
+                    <div class="color-btn" style="background:#ff0000;" onclick="setColor('#ff0000')" title="Rojo"></div>
+                    <div class="color-btn" style="background:#ff6600;" onclick="setColor('#ff6600')" title="Naranja"></div>
+                    <div class="color-btn" style="background:#ffcc00;" onclick="setColor('#ffcc00')" title="Amarillo"></div>
+                    <div class="color-btn" style="background:#00cc00;" onclick="setColor('#00cc00')" title="Verde"></div>
+                    <div class="color-btn" style="background:#0066ff;" onclick="setColor('#0066ff')" title="Azul"></div>
+                    <div class="color-btn" style="background:#7700ff;" onclick="setColor('#7700ff')" title="Violeta"></div>
+                    <div class="color-btn" style="background:#ff0099;" onclick="setColor('#ff0099')" title="Rosa"></div>
                 </div>
                 <canvas id="artCanvas" class="paint-canvas" width="500" height="300"></canvas>
             </div>
         </div>
 
         <div class="window">
-            <div class="window-header"><div class="window-title"><span>📚 Créditos & Referencias</span></div>
-                <div class="window-controls"><button class="btn-control">_</button><button class="btn-control">□</button><button class="btn-control">✕</button></div>
+            <div class="window-header">
+                <div class="window-title"><span>📚 Créditos & Referencias</span></div>
+                <div class="window-controls">
+                    <button class="btn-control">_</button>
+                    <button class="btn-control">□</button>
+                    <button class="btn-control">✕</button>
+                </div>
             </div>
             <div class="window-body">
-                <p style="margin-bottom:8px;font-weight:600;">Lista de Referencias de Juegos</p>
-                <p style="font-size:0.9rem;margin-bottom:10px;">Los siguientes juegos son homenajes con fines educativos.</p>
-                <div class="apa-style">Bandai Namco Entertainment. (1980). <i>Pac-Man</i> [Videojuego].</div>
-                <div class="apa-style">The Tetris Company. (1984). <i>Tetris</i> [Videojuego].</div>
-                <div class="apa-style">.GEARS Studios. (2013). <i>Flappy Bird</i> [Aplicación móvil].</div>
-                <div class="apa-style">Atari Interactive. (1972). <i>Pong</i> [Videojuego].</div>
-                <div class="apa-style">Milton Bradley (Hasbro). (1978). <i>Simon</i> [Juego electrónico].</div>
-                <div class="apa-style">Tradicional. (s.f.). <i>Ahorcado</i> [Juego de lápiz y papel]. Dominio Público.</div>
+                <p style="margin-bottom: 8px; font-weight: 600;">Lista de Referencias de Juegos</p>
+                <p style="font-size: 0.9rem; margin-bottom: 10px;">
+                    Los siguientes juegos son homenajes realizados con fines educativos.
+                </p>
+                <div class="apa-style">
+                    Bandai Namco Entertainment. (1980). <i>Pac-Man</i> [Videojuego].
+                </div>
+                <div class="apa-style">
+                    The Tetris Company. (1984). <i>Tetris</i> [Videojuego].
+                </div>
+                <div class="apa-style">
+                    .GEARS Studios. (2013). <i>Flappy Bird</i> [Aplicación móvil].
+                </div>
+                <div class="apa-style">
+                    Atari Interactive. (1972). <i>Pong</i> [Videojuego].
+                </div>
+                <div class="apa-style">
+                    Milton Bradley (Hasbro). (1978). <i>Simon</i> [Juego electrónico].
+                </div>
+                <div class="apa-style">
+                    Tradicional. (s.f.). <i>Ahorcado</i> [Juego de lápiz y papel]. Dominio Público.
+                </div>
                 <hr>
-                <p style="text-align:center;font-size:0.9rem;">
+                <p style="text-align: center; font-size: 0.9rem;">
                     Sitio Web © 2026 Vini's World.<br>
-                    <i>Diseñado con <i class="fas fa-heart" style="color:#0072c6;"></i> y polvo de estrellas.</i>
+                    <i>Diseñado con <i class="fas fa-heart" style="color: #0072c6;"></i> y polvo de estrellas.</i>
                 </p>
             </div>
         </div>
@@ -289,47 +585,69 @@
     </div>
 
     <script>
-        // Contador visitas
-        let visits = localStorage.getItem('vini_visits') || '1';
-        visits = parseInt(visits) + 1;
-        localStorage.setItem('vini_visits', visits);
-        document.getElementById('visit-count').textContent = String(visits).padStart(6,'0');
+        // Contador de visitas
+        let visits = localStorage.getItem('vini_visits_frutiger_complete');
+        if (!visits) { visits = 1; } else { visits = parseInt(visits) + 1; }
+        localStorage.setItem('vini_visits_frutiger_complete', visits);
+        document.getElementById('visit-count').innerText = visits.toString().padStart(6, '0');
 
-        // Canvas pintura
+        // Pintura en canvas
         const canvas = document.getElementById('artCanvas');
-        if (canvas) {
-            const ctx = canvas.getContext('2d');
-            let painting = false, color = '#000', tool = 'pencil';
-            ctx.lineWidth = 3; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        const ctx = canvas.getContext('2d');
+        let painting = false;
+        let currentColor = '#000000';
+        let currentTool = 'pencil';
 
-            window.setColor = c => { color = c; tool = 'pencil'; };
-            window.setTool = t => tool = t;
-            window.clearCanvas = () => ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.lineWidth = 3;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
 
-            function start(e) { painting = true; draw(e); }
-            function end() { painting = false; ctx.beginPath(); }
-            function draw(e) {
-                if (!painting) return;
-                e.preventDefault();
-                const r = canvas.getBoundingClientRect();
-                const x = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
-                const y = (e.touches ? e.touches[0].clientY : e.clientY) - r.top;
-                ctx.strokeStyle = tool === 'eraser' ? '#fff' : color;
-                ctx.lineWidth = tool === 'eraser' ? 15 : 3;
-                ctx.lineTo(x,y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x,y);
-            }
+        window.setColor = function(color) {
+            currentColor = color;
+            currentTool = 'pencil';
+        };
 
-            canvas.addEventListener('mousedown', start);
-            canvas.addEventListener('mouseup', end);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseleave', end);
-            canvas.addEventListener('touchstart', start);
-            canvas.addEventListener('touchend', end);
-            canvas.addEventListener('touchmove', draw);
+        window.setTool = function(tool) {
+            currentTool = tool;
+        };
+
+        window.clearCanvas = function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        };
+
+        function startPosition(e) {
+            painting = true;
+            draw(e);
         }
 
-        // Forzar autoplay si navegador lo bloquea (raro con muted)
-        document.addEventListener('click', () => document.getElementById('bg-video')?.play(), {once:true});
+        function endPosition() {
+            painting = false;
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!painting) return;
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            let x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+            let y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+
+            ctx.strokeStyle = currentTool === 'eraser' ? '#ffffff' : currentColor;
+            ctx.lineWidth = currentTool === 'eraser' ? 15 : 3;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', endPosition);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseleave', endPosition);
+        canvas.addEventListener('touchstart', startPosition);
+        canvas.addEventListener('touchend', endPosition);
+        canvas.addEventListener('touchmove', draw);
     </script>
 </body>
 </html>

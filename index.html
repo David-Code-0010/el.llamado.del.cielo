@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VINI'S WORLD - Aero Edition</title>
+    <title>VINI'S WORLD - Aero Realistic</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         /* =========================================
-           FRUTIGER AERO 2000s STYLE
+           FRUTIGER AERO REALISTIC - VISTA/7 AUTHENTIC
            ========================================= */
         
         * {
@@ -19,17 +19,24 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(180deg, #4a7ba7 0%, #6e9fbd 50%, #8bb4cc 100%);
-            background-attachment: fixed;
-            color: #333333;
-            padding: 15px;
-            min-height: 100vh;
-            position: relative;
+        html, body {
+            width: 100%;
+            height: 100%;
         }
 
-        /* AERO GLASS EFFECT - Subtle */
+        body {
+            font-family: 'Segoe UI', 'Tahoma', sans-serif;
+            background: linear-gradient(180deg, #4a7ba7 0%, #5f92b8 30%, #6eb4d6 70%, #8cc5e1 100%);
+            background-attachment: fixed;
+            color: #333333;
+            padding: 8px;
+            min-height: 100vh;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* AERO GLASS BACKGROUND EFFECT */
         body::before {
             content: '';
             position: fixed;
@@ -37,34 +44,43 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1), transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(0,0,0,0.1), transparent 50%);
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(255,255,255,0.15), transparent 40%),
+                radial-gradient(ellipse at 80% 70%, rgba(0,0,0,0.08), transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.05), transparent 60%);
             pointer-events: none;
             z-index: 0;
         }
 
         .container {
-            max-width: 850px;
+            max-width: 900px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
         }
 
         /* =========================================
-           AERO WINDOW STYLE - Vista/7
+           WINDOWS AERO GLASS PANEL
            ========================================= */
         
         .window {
-            background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(245,245,245,0.95) 100%);
-            border: 1px solid rgba(0,0,0,0.15);
-            border-radius: 6px;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.15), 
-                        inset 1px 1px 0 rgba(255,255,255,0.9),
-                        inset 0 0 0 1px rgba(255,255,255,0.5);
-            margin-bottom: 18px;
+            background: linear-gradient(180deg, 
+                rgba(255,255,255,0.97) 0%, 
+                rgba(248,250,252,0.96) 40%, 
+                rgba(240,245,250,0.95) 100%);
+            border: 1px solid rgba(0,0,0,0.2);
+            border-radius: 4px;
+            box-shadow: 
+                0 1px 3px rgba(0,0,0,0.25),
+                0 15px 35px rgba(0,0,0,0.12),
+                inset 0 1px 0 rgba(255,255,255,0.95),
+                inset 1px 0 0 rgba(255,255,255,0.6),
+                inset -1px 0 0 rgba(0,0,0,0.08);
+            margin-bottom: 12px;
             position: relative;
             font-size: 12px;
             overflow: hidden;
+            backdrop-filter: blur(0.5px);
         }
 
         .window::before {
@@ -74,27 +90,45 @@
             left: 0;
             right: 0;
             height: 1px;
-            background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.8), rgba(255,255,255,0));
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0), 
+                rgba(255,255,255,0.9), 
+                rgba(255,255,255,0));
+            z-index: 10;
+        }
+
+        .window::after {
+            content: '';
+            position: absolute;
+            top: 32px;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg,
+                rgba(0,0,0,0),
+                rgba(0,0,0,0.05),
+                rgba(0,0,0,0));
             z-index: 10;
         }
 
         .window-header {
-            background: linear-gradient(180deg, #008cc4 0%, #0078b5 100%);
+            background: linear-gradient(180deg, #0072c6 0%, #0066b8 1%, #005fa6 50%, #00528f 100%);
             color: #ffffff;
-            padding: 8px 15px;
+            padding: 6px 8px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            text-shadow: 0 1px 1px rgba(0,0,0,0.2);
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(0,0,0,0.2);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
         }
 
         .window-title {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .window-icon {
@@ -103,21 +137,22 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            opacity: 0.9;
+            font-size: 12px;
+            opacity: 1;
+            text-shadow: 0 1px 0 rgba(0,0,0,0.2);
         }
 
         .window-controls {
             display: flex;
-            gap: 6px;
+            gap: 4px;
         }
 
         .btn-control {
-            width: 24px;
+            width: 22px;
             height: 20px;
-            background: linear-gradient(180deg, #4da6d6, #0078b5);
-            border: 1px solid rgba(0,0,0,0.2);
-            border-radius: 3px;
+            background: linear-gradient(180deg, #1e8dff 0%, #0078d4 100%);
+            border: 1px solid #004a99;
+            border-radius: 2px;
             font-size: 10px;
             font-weight: bold;
             display: flex;
@@ -125,83 +160,100 @@
             justify-content: center;
             color: #ffffff;
             cursor: pointer;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.3);
-            transition: all 0.2s;
+            box-shadow: 
+                inset 0 1px 0 rgba(255,255,255,0.4),
+                0 1px 2px rgba(0,0,0,0.2);
+            transition: all 0.15s;
         }
 
         .btn-control:hover {
-            background: linear-gradient(180deg, #5baddd, #0084c2);
+            background: linear-gradient(180deg, #2a9aff 0%, #0084e6 100%);
+            box-shadow: 
+                inset 0 1px 0 rgba(255,255,255,0.5),
+                0 2px 4px rgba(0,0,0,0.25);
         }
 
         .btn-control:active {
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+            box-shadow: 
+                inset 0 2px 3px rgba(0,0,0,0.2),
+                0 1px 1px rgba(0,0,0,0.1);
         }
 
         .window-body {
-            padding: 15px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(240,240,240,0.95));
+            padding: 12px;
+            background: linear-gradient(180deg, 
+                rgba(255,255,255,0.97) 0%, 
+                rgba(245,248,252,0.96) 100%);
             color: #333333;
             line-height: 1.5;
         }
 
         .window-body p {
-            margin: 8px 0;
+            margin: 6px 0;
+        }
+
+        .window-body strong {
+            color: #222222;
+            font-weight: 600;
         }
 
         /* =========================================
-           TOP TASKBAR STYLE
+           TOP HEADER BAR
            ========================================= */
         
         .top-bar {
-            background: linear-gradient(180deg, #0078b5, #006d9f);
-            border-radius: 8px;
-            padding: 12px 18px;
-            margin-bottom: 15px;
+            background: linear-gradient(180deg, #0072c6 0%, #005fa6 100%);
+            border-radius: 4px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 44px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2),
-                        inset 0 1px 0 rgba(255,255,255,0.2);
-            border: 1px solid rgba(0,0,0,0.1);
+            height: 40px;
+            box-shadow: 
+                0 3px 12px rgba(0,0,0,0.25),
+                inset 0 1px 0 rgba(255,255,255,0.25);
+            border: 1px solid rgba(0,0,0,0.15);
         }
 
         .logo-text {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            letter-spacing: 0.5px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+            font-family: 'Segoe UI', 'Tahoma', sans-serif;
+            letter-spacing: 0.3px;
         }
 
         .visitor-counter {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            color: rgba(255,255,255,0.95);
+            color: rgba(255,255,255,0.98);
             text-shadow: 0 1px 1px rgba(0,0,0,0.3);
         }
 
         /* =========================================
-           PROFILE SECTION
+           PROFILE IMAGE
            ========================================= */
         
         .profile-pic {
             float: left;
             margin-right: 12px;
-            margin-bottom: 10px;
-            width: 110px;
-            border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2),
-                        inset 0 0 0 1px rgba(255,255,255,0.5);
-            border: 1px solid rgba(0,0,0,0.1);
+            margin-bottom: 8px;
+            width: 105px;
+            border-radius: 3px;
+            box-shadow: 
+                0 3px 8px rgba(0,0,0,0.25),
+                inset 0 0 0 1px rgba(255,255,255,0.6);
+            border: 1px solid rgba(0,0,0,0.15);
             transition: all 0.3s;
         }
 
         .profile-pic:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3),
-                        inset 0 0 0 1px rgba(255,255,255,0.5);
-            transform: scale(1.02);
+            box-shadow: 
+                0 5px 15px rgba(0,0,0,0.3),
+                inset 0 0 0 1px rgba(255,255,255,0.6);
+            transform: scale(1.03);
         }
 
         /* =========================================
@@ -209,28 +261,36 @@
            ========================================= */
         
         button, .btn-aero {
-            background: linear-gradient(180deg, #f3f3f3, #e8e8e8);
-            border: 1px solid #c0c0c0;
-            border-radius: 4px;
-            padding: 5px 14px;
-            font-size: 12px;
+            background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 50%, #e8e8e8 100%);
+            border: 1px solid #bfbfbf;
+            border-radius: 3px;
+            padding: 4px 12px;
+            font-size: 11px;
             font-weight: 600;
             color: #333333;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', 'Tahoma', sans-serif;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1),
-                        inset 0 1px 0 rgba(255,255,255,0.8);
-            transition: all 0.2s;
+            box-shadow: 
+                0 1px 3px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.9),
+                inset 1px 0 0 rgba(255,255,255,0.5);
+            transition: all 0.15s;
         }
 
         button:hover, .btn-aero:hover {
-            background: linear-gradient(180deg, #ffffff, #f0f0f0);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15),
-                        inset 0 1px 0 rgba(255,255,255,0.9);
+            background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 50%, #ebebeb 100%);
+            border: 1px solid #a0a0a0;
+            box-shadow: 
+                0 1px 4px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.95),
+                inset 1px 0 0 rgba(255,255,255,0.6);
         }
 
         button:active, .btn-aero:active {
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+            background: linear-gradient(180deg, #f0f0f0 0%, #e8e8e8 50%, #dcdcdc 100%);
+            box-shadow: 
+                inset 0 1px 3px rgba(0,0,0,0.15),
+                inset 1px 1px 1px rgba(0,0,0,0.05);
         }
 
         /* =========================================
@@ -240,49 +300,53 @@
         .social-flex-container {
             display: flex;
             justify-content: center;
-            gap: 12px;
-            padding: 10px;
+            gap: 14px;
+            padding: 12px;
             flex-wrap: wrap;
         }
 
         .cute-btn-social {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(180deg, #f3f3f3, #e8e8e8);
-            border: 1px solid #b5b5b5;
+            width: 54px;
+            height: 54px;
+            background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 100%);
+            border: 1px solid #b8b8b8;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
             text-decoration: none;
-            font-size: 22px;
-            color: #0078b5;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15),
-                        inset 0 1px 0 rgba(255,255,255,0.8);
-            transition: all 0.3s;
+            font-size: 24px;
+            color: #0072c6;
+            box-shadow: 
+                0 2px 6px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.9);
+            transition: all 0.2s;
         }
 
         .cute-btn-social:hover {
-            background: linear-gradient(180deg, #ffffff, #f5f5f5);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2),
-                        inset 0 1px 0 rgba(255,255,255,0.9);
+            background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+            border: 1px solid #a0a0a0;
+            box-shadow: 
+                0 3px 10px rgba(0,0,0,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.95);
             transform: translateY(-2px);
         }
 
         .cute-btn-social:active {
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+            box-shadow: 
+                inset 0 2px 4px rgba(0,0,0,0.15);
             transform: translateY(0);
         }
 
         /* =========================================
-           GAMES GRID - AERO
+           GAMES GRID
            ========================================= */
         
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 12px;
-            margin-top: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
         }
 
         .game-btn {
@@ -290,430 +354,90 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(180deg, #ffffff, #f5f5f5);
-            border: 1px solid #b5b5b5;
-            padding: 12px;
+            background: linear-gradient(180deg, #fafafa 0%, #f2f2f2 100%);
+            border: 1px solid #c0c0c0;
+            padding: 10px;
             text-decoration: none;
-            color: #0078b5;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            font-size: 11px;
+            color: #0072c6;
+            font-family: 'Segoe UI', 'Tahoma', sans-serif;
+            font-size: 10px;
             font-weight: 600;
-            border-radius: 6px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1),
-                        inset 0 1px 0 rgba(255,255,255,0.8);
-            transition: all 0.3s;
-            min-height: 80px;
+            border-radius: 3px;
+            box-shadow: 
+                0 1px 3px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.2s;
+            min-height: 75px;
         }
 
         .game-btn:hover {
-            background: linear-gradient(180deg, #ffffff, #f0f0f0);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15),
-                        inset 0 1px 0 rgba(255,255,255,0.9);
-            transform: translateY(-2px);
+            background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+            border: 1px solid #a8a8a8;
+            box-shadow: 
+                0 2px 6px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.9);
+            transform: translateY(-1px);
         }
 
         .game-btn:active {
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+            box-shadow: 
+                inset 0 1px 2px rgba(0,0,0,0.1);
             transform: translateY(0);
         }
 
         .game-btn i {
-            font-size: 28px;
-            margin-bottom: 6px;
+            font-size: 26px;
+            margin-bottom: 4px;
         }
 
         /* =========================================
-           ARTIFACTS - AERO 3D
+           ARTIFACTS GRID
            ========================================= */
         
         .artifacts-grid {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
-            padding: 10px 0;
+            gap: 18px;
+            padding: 8px 0;
             align-items: flex-end;
         }
 
         .artifact-label {
             display: block;
-            margin-top: 8px;
-            font-size: 11px;
-            color: #0078b5;
+            margin-top: 6px;
+            font-size: 10px;
+            color: #0072c6;
             font-weight: 600;
             text-align: center;
         }
 
-        /* GAME BOY */
-        .gameboy-css {
-            width: 130px;
-            height: 195px;
-            background: linear-gradient(135deg, #e0f2f7, #d0e8f2);
-            border: 2px solid;
-            border-color: #ffffff #7a7a7a #7a7a7a #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2),
-                        inset 0 1px 0 rgba(255,255,255,0.6);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .gb-screen-area {
-            background: linear-gradient(135deg, #a4d65e, #98c955);
-            width: 105px;
-            height: 80px;
-            margin-top: 14px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            border: 2px solid rgba(0,0,0,0.1);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .gb-screen {
-            background: #e0f8e0;
-            width: 75px;
-            height: 60px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            color: #5d7a46;
-            font-weight: 600;
-            font-size: 8px;
-            border-radius: 4px;
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-
-        .gb-logo {
-            font-size: 7px;
-            color: #333333;
-            font-weight: 700;
-            align-self: flex-start;
-            margin-left: 12px;
-        }
-
-        .gb-controls {
-            width: 100%;
-            height: 75px;
-            position: relative;
-        }
-
-        .d-pad {
-            position: absolute;
-            top: 12px;
-            left: 10px;
-            width: 36px;
-            height: 36px;
-        }
-
-        .d-pad div {
-            background: #999999;
-            position: absolute;
-            border: 1px solid;
-            border-color: #ffffff #3a3a3a #3a3a3a #ffffff;
-            border-radius: 2px;
-        }
-
-        .d-pad .h {
-            width: 36px;
-            height: 11px;
-            top: 12px;
-            left: 0;
-        }
-
-        .d-pad .v {
-            width: 11px;
-            height: 36px;
-            top: 0;
-            left: 12px;
-        }
-
-        .ab-btns {
-            position: absolute;
-            top: 16px;
-            right: 10px;
-            display: flex;
-            gap: 5px;
-        }
-
-        .btn-round {
-            width: 14px;
-            height: 14px;
-            background: radial-gradient(circle at 30% 30%, #ff9999, #ff5555);
-            border-radius: 50%;
-            border: 1px solid rgba(0,0,0,0.2);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .start-select {
-            position: absolute;
-            bottom: 12px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 7px;
-        }
-
-        .btn-pill {
-            width: 18px;
-            height: 6px;
-            background: #888888;
-            border-radius: 3px;
-            border: 1px solid rgba(0,0,0,0.2);
-        }
-
-        /* GBA */
-        .gba-css {
-            width: 160px;
-            height: 95px;
-            background: linear-gradient(135deg, #e0f2f7, #d0e8f2);
-            border: 2px solid;
-            border-color: #ffffff #7a7a7a #7a7a7a #ffffff;
-            border-radius: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2),
-                        inset 0 1px 0 rgba(255,255,255,0.6);
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .gba-screen-area {
-            width: 90px;
-            height: 65px;
-            background: linear-gradient(135deg, #a4d65e, #98c955);
-            border-radius: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid rgba(0,0,0,0.1);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .gba-screen {
-            width: 75px;
-            height: 55px;
-            background: linear-gradient(135deg, #f0f8f0, #e0f0e0);
-            border-radius: 6px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .gba-dpad {
-            position: absolute;
-            left: 14px;
-            top: 32px;
-            width: 28px;
-            height: 28px;
-        }
-
-        .gba-dpad div {
-            background: #999999;
-            position: absolute;
-            border: 1px solid;
-            border-color: #ffffff #3a3a3a #3a3a3a #ffffff;
-            border-radius: 2px;
-        }
-
-        .gba-dpad .h {
-            width: 28px;
-            height: 9px;
-            top: 9px;
-        }
-
-        .gba-dpad .v {
-            width: 9px;
-            height: 28px;
-            left: 9px;
-        }
-
-        .gba-btns {
-            position: absolute;
-            right: 14px;
-            top: 32px;
-            display: flex;
-            gap: 4px;
-        }
-
-        .gba-btn {
-            width: 11px;
-            height: 11px;
-            background: radial-gradient(circle at 30% 30%, #ff9999, #ff5555);
-            border-radius: 50%;
-            border: 1px solid rgba(0,0,0,0.2);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        /* NES */
-        .nes-css {
-            width: 155px;
-            height: 75px;
-            background: linear-gradient(135deg, #e0e0e0, #d5d5d5);
-            border: 2px solid;
-            border-color: #ffffff #5a5a5a #5a5a5a #ffffff;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2),
-                        inset 0 1px 0 rgba(255,255,255,0.6);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nes-stripe {
-            width: 145px;
-            height: 65px;
-            background: linear-gradient(to bottom, #f0f0f0, #e5e5e5);
-            border: 1px solid rgba(0,0,0,0.1);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 8px;
+        /* CONSOLES - SIMPLIFIED AERO */
+        .gameboy-css, .gba-css, .nes-css, .phone-css {
+            box-shadow: 
+                0 3px 8px rgba(0,0,0,0.2),
+                inset 0 1px 0 rgba(255,255,255,0.4);
             border-radius: 4px;
         }
 
-        .nes-black-zone {
-            width: 80px;
-            height: 38px;
-            background: #1a1a1a;
-            border: 2px solid;
-            border-color: #ffffff #2a2a2a #2a2a2a #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 4px;
-            border-radius: 3px;
-        }
-
-        .nes-dpad {
-            position: relative;
-            width: 28px;
-            height: 28px;
-        }
-
-        .nes-dpad div {
-            background: #ffffff;
-            position: absolute;
-            border: 1px solid rgba(0,0,0,0.2);
-            border-radius: 1px;
-        }
-
-        .nes-dpad .h {
-            width: 28px;
-            height: 9px;
-            top: 9px;
-        }
-
-        .nes-dpad .v {
-            width: 9px;
-            height: 28px;
-            left: 9px;
-        }
-
-        .nes-btns {
-            display: flex;
-            gap: 5px;
-        }
-
-        .nes-btn {
-            width: 13px;
-            height: 13px;
-            background: radial-gradient(circle at 30% 30%, #ff7777, #ff2222);
-            border-radius: 50%;
-            border: 1px solid rgba(255,255,255,0.3);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        /* OLD PHONE */
-        .phone-css {
-            width: 72px;
-            height: 140px;
-            background: linear-gradient(135deg, #d0d0d0, #c0c0c0);
-            border: 2px solid;
-            border-color: #ffffff #5a5a5a #5a5a5a #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2),
-                        inset 0 1px 0 rgba(255,255,255,0.6);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .phone-antenna {
-            position: absolute;
-            top: -16px;
-            right: 8px;
-            width: 6px;
-            height: 16px;
-            background: #888888;
-            border-radius: 2px;
-            border: 1px solid rgba(0,0,0,0.2);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-
-        .phone-screen {
-            width: 50px;
-            height: 32px;
-            background: linear-gradient(135deg, #b0e0e6, #a5d8e0);
-            margin-top: 12px;
-            border: 2px solid;
-            border-color: #ffffff #2a2a2a #2a2a2a #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 7px;
-            font-weight: bold;
-            border-radius: 2px;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .phone-keys {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 3px;
-            width: 55px;
-            margin-top: 10px;
-        }
-
-        .phone-key {
-            width: 11px;
-            height: 8px;
-            background: linear-gradient(180deg, #f0f0f0, #e0e0e0);
-            border-radius: 1px;
-            border: 1px solid;
-            border-color: #ffffff #3a3a3a #3a3a3a #ffffff;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-        }
-
-        /* =========================================
-           PAINT CANVAS - AERO
-           ========================================= */
-        
+        /* PAINT CANVAS */
         .paint-toolbar {
             display: flex;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             flex-wrap: wrap;
         }
 
         .paint-canvas {
             background-color: #ffffff;
-            border: 1px solid #b5b5b5;
-            border-radius: 4px;
+            border: 1px solid #b8b8b8;
+            border-radius: 3px;
             cursor: crosshair;
             touch-action: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1),
-                        inset 0 1px 0 rgba(255,255,255,0.8);
+            box-shadow: 
+                0 2px 6px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.8);
             max-width: 100%;
             display: block;
             margin: 0 auto;
@@ -722,92 +446,76 @@
         .color-btn {
             width: 26px;
             height: 26px;
-            border: 1px solid #b5b5b5;
-            border-radius: 3px;
+            border: 1px solid #b0b0b0;
+            border-radius: 2px;
             cursor: pointer;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1),
-                        inset 0 1px 0 rgba(255,255,255,0.7);
-            transition: all 0.2s;
+            box-shadow: 
+                0 1px 2px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.7);
+            transition: all 0.15s;
         }
 
         .color-btn:hover {
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15),
-                        inset 0 1px 0 rgba(255,255,255,0.8);
+            box-shadow: 
+                0 2px 4px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            transform: scale(1.05);
         }
 
         .tool-btn {
-            background: linear-gradient(180deg, #f3f3f3, #e8e8e8);
-            border: 1px solid #b5b5b5;
+            background: linear-gradient(180deg, #f8f8f8 0%, #f0f0f0 100%);
+            border: 1px solid #bfbfbf;
             color: #333333;
-            padding: 5px 12px;
-            font-family: 'Segoe UI', Arial, sans-serif;
+            padding: 4px 10px;
+            font-family: 'Segoe UI', 'Tahoma', sans-serif;
             cursor: pointer;
             font-weight: 600;
-            font-size: 11px;
-            border-radius: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1),
-                        inset 0 1px 0 rgba(255,255,255,0.8);
-            transition: all 0.2s;
+            font-size: 10px;
+            border-radius: 3px;
+            box-shadow: 
+                0 1px 2px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: all 0.15s;
         }
 
         .tool-btn:hover {
-            background: linear-gradient(180deg, #ffffff, #f0f0f0);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15),
-                        inset 0 1px 0 rgba(255,255,255,0.9);
+            background: linear-gradient(180deg, #ffffff 0%, #f5f5f5 100%);
+            box-shadow: 
+                0 1px 3px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.9);
         }
 
         .tool-btn:active {
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.15);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
         }
 
-        /* =========================================
-           TEXT SECTIONS
-           ========================================= */
-        
+        /* TEXT SECTIONS */
         .apa-style {
-            background: linear-gradient(180deg, #f5f5f5, #eeeeee);
+            background: linear-gradient(180deg, #f5f5f5, #efefef);
             padding: 8px;
-            margin: 8px 0;
-            border-left: 3px solid #0078b5;
-            border-radius: 3px;
-            font-size: 11px;
+            margin: 6px 0;
+            border-left: 3px solid #0072c6;
+            border-radius: 2px;
+            font-size: 10px;
             font-style: italic;
             color: #333333;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
         }
 
         hr {
             border: none;
-            border-top: 1px solid #c0c0c0;
-            border-bottom: 1px solid #ffffff;
-            margin: 10px 0;
+            border-top: 1px solid #d0d0d0;
+            border-bottom: 1px solid rgba(255,255,255,0.6);
+            margin: 8px 0;
         }
 
-        /* =========================================
-           RESPONSIVE
-           ========================================= */
-        
+        /* RESPONSIVE */
         @media (max-width: 700px) {
-            .window {
-                margin-bottom: 15px;
-            }
-
-            .games-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .artifacts-grid {
-                gap: 15px;
-            }
-
-            .paint-canvas {
-                width: 100%;
-                height: 250px;
-            }
-
-            .profile-pic {
-                width: 90px;
-            }
+            .window { margin-bottom: 10px; }
+            .games-grid { grid-template-columns: repeat(2, 1fr); }
+            .artifacts-grid { gap: 12px; }
+            .paint-canvas { width: 100%; height: 250px; }
+            .profile-pic { width: 90px; }
         }
     </style>
 </head>
@@ -815,10 +523,10 @@
 
     <div class="container">
 
-        <!-- TOP TASKBAR -->
+        <!-- TOP BAR -->
         <div class="top-bar">
             <div class="logo-text">🦈 VINI'S WORLD</div>
-            <div class="visitor-counter">Visitas: <span id="visit-count">000000</span></div>
+            <div class="visitor-counter">Visitas: <span id="visit-count">000001</span></div>
         </div>
 
         <!-- LORE WINDOW -->
@@ -923,76 +631,6 @@
             </div>
         </div>
 
-        <!-- ARTIFACTS WINDOW -->
-        <div class="window">
-            <div class="window-header">
-                <div class="window-title">
-                    <div class="window-icon">⏰</div>
-                    <span>Artefactos Retro</span>
-                </div>
-                <div class="window-controls">
-                    <button class="btn-control">_</button>
-                    <button class="btn-control">□</button>
-                    <button class="btn-control">✕</button>
-                </div>
-            </div>
-            <div class="window-body">
-                <p style="text-align: center; font-weight: 600; margin-bottom: 12px;">Mi colección de tesoros:</p>
-                
-                <div class="artifacts-grid">
-                    <div>
-                        <div class="gameboy-css">
-                            <div class="gb-screen-area">
-                                <span class="gb-logo">GAME BOY</span>
-                                <div class="gb-screen">PRESS START</div>
-                            </div>
-                            <div class="gb-controls">
-                                <div class="d-pad"><div class="v"></div><div class="h"></div></div>
-                                <div class="ab-btns"><div class="btn-round"></div><div class="btn-round"></div></div>
-                                <div class="start-select"><div class="btn-pill"></div><div class="btn-pill"></div></div>
-                            </div>
-                        </div>
-                        <span class="artifact-label">Classic</span>
-                    </div>
-
-                    <div>
-                        <div class="gba-css">
-                            <div class="gba-dpad"><div class="v"></div><div class="h"></div></div>
-                            <div class="gba-screen-area"><div class="gba-screen"></div></div>
-                            <div class="gba-btns"><div class="gba-btn"></div><div class="gba-btn"></div></div>
-                        </div>
-                        <span class="artifact-label">Advance</span>
-                    </div>
-
-                    <div>
-                        <div class="nes-css">
-                            <div class="nes-stripe">
-                                <div class="nes-black-zone">
-                                    <div class="nes-dpad"><div class="v"></div><div class="h"></div></div>
-                                    <span style="color: #ff3333; font-size: 1rem;">♥</span>
-                                    <div class="nes-btns"><div class="nes-btn"></div><div class="nes-btn"></div></div>
-                                </div>
-                            </div>
-                        </div>
-                        <span class="artifact-label">NES</span>
-                    </div>
-
-                    <div>
-                        <div class="phone-css">
-                            <div class="phone-antenna"></div>
-                            <div class="phone-screen">CALL ME</div>
-                            <div class="phone-keys">
-                                <div class="phone-key"></div><div class="phone-key"></div><div class="phone-key"></div>
-                                <div class="phone-key"></div><div class="phone-key"></div><div class="phone-key"></div>
-                                <div class="phone-key"></div><div class="phone-key"></div><div class="phone-key"></div>
-                            </div>
-                        </div>
-                        <span class="artifact-label">Old Phone</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- PAINT WINDOW -->
         <div class="window">
             <div class="window-header">
@@ -1015,15 +653,15 @@
                     <button class="tool-btn" onclick="clearCanvas()">🗑️ Limpiar</button>
                 </div>
 
-                <div class="paint-toolbar" style="margin-top: 8px;">
+                <div class="paint-toolbar" style="margin-top: 6px;">
                     <div class="color-btn" style="background:#000000;" onclick="setColor('#000000')" title="Negro"></div>
-                    <div class="color-btn" style="background:#555555;" onclick="setColor('#555555')" title="Gris"></div>
+                    <div class="color-btn" style="background:#666666;" onclick="setColor('#666666')" title="Gris"></div>
                     <div class="color-btn" style="background:#ff0000;" onclick="setColor('#ff0000')" title="Rojo"></div>
                     <div class="color-btn" style="background:#ff6600;" onclick="setColor('#ff6600')" title="Naranja"></div>
                     <div class="color-btn" style="background:#ffcc00;" onclick="setColor('#ffcc00')" title="Amarillo"></div>
                     <div class="color-btn" style="background:#00cc00;" onclick="setColor('#00cc00')" title="Verde"></div>
                     <div class="color-btn" style="background:#0066ff;" onclick="setColor('#0066ff')" title="Azul"></div>
-                    <div class="color-btn" style="background:#6600ff;" onclick="setColor('#6600ff')" title="Violeta"></div>
+                    <div class="color-btn" style="background:#7700ff;" onclick="setColor('#7700ff')" title="Violeta"></div>
                     <div class="color-btn" style="background:#ff0099;" onclick="setColor('#ff0099')" title="Rosa"></div>
                 </div>
 
@@ -1047,7 +685,7 @@
             <div class="window-body">
                 <p style="text-align: center; font-weight: 600; margin-bottom: 8px;">Lista de Referencias de Juegos</p>
 
-                <p style="text-align: center; font-size: 11px; margin-bottom: 10px;">
+                <p style="text-align: center; font-size: 10px; margin-bottom: 10px;">
                     Los siguientes juegos son homenajes realizados con fines educativos.
                 </p>
 
@@ -1077,9 +715,9 @@
 
                 <hr>
 
-                <p style="text-align: center; font-size: 11px;">
+                <p style="text-align: center; font-size: 10px;">
                     Sitio Web © 2026 Vini's World.<br>
-                    <i>Diseñado con <i class="fas fa-heart" style="color: #0078b5;"></i> y polvo de estrellas.</i>
+                    <i>Diseñado con <i class="fas fa-heart" style="color: #0072c6;"></i> y polvo de estrellas.</i>
                 </p>
             </div>
         </div>
@@ -1088,10 +726,9 @@
 
     <script>
         // VISITOR COUNTER
-        let visits = localStorage.getItem('vini_visits_aero');
-        if (!visits) { visits = 0; } else { visits = parseInt(visits); }
-        visits = visits + 1;
-        localStorage.setItem('vini_visits_aero', visits);
+        let visits = localStorage.getItem('vini_visits_aero_real');
+        if (!visits) { visits = 1; } else { visits = parseInt(visits) + 1; }
+        localStorage.setItem('vini_visits_aero_real', visits);
         document.getElementById('visit-count').innerText = visits.toString().padStart(6, '0');
 
         // PAINT CANVAS

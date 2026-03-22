@@ -69,13 +69,22 @@
             background:#f8fafc;
         }
 
-        /* Contenedor del ahorcado */
+        /* Contenedor del ahorcado corregido */
         .game-container {
             text-align:center; width:100%; max-width:500px;
         }
         .hangman-figure {
-            font-size:180px; margin:20px 0; color:#1e293b;
-            text-shadow:0 4px 10px rgba(30,41,59,0.3);
+            font-size: 100px; /* Tamaño ajustado para que quepa bien */
+            margin: 20px auto; 
+            color: #1e293b;
+            text-shadow: 0 4px 10px rgba(30,41,59,0.3);
+            min-height: 150px; /* Altura fija para evitar que la pantalla salte */
+            white-space: pre; /* Permite que los saltos de línea (\n) funcionen */
+            font-family: monospace; /* Alinea los caracteres a la perfección */
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .word-display {
             font-size:3.5rem; letter-spacing:12px; margin:30px 0;
@@ -104,6 +113,7 @@
         .message {
             font-size:2.5rem; margin:20px 0; color:#1e40af;
             text-shadow:0 2px 8px rgba(30,64,175,0.4);
+            min-height: 40px; /* Para que el mensaje tampoco haga saltar la pantalla */
         }
 
         .back-btn {
@@ -111,13 +121,15 @@
             background:linear-gradient(180deg,#fdfdfd,#e2e8f0); border:1px solid #64748b;
             border-radius:6px; padding:8px 16px; cursor:pointer;
             box-shadow:0 2px 8px rgba(0,0,0,0.2); transition:all 0.2s;
+            text-decoration: none;
+            color: #1e293b;
         }
         .back-btn:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(30,64,175,0.35); }
 
         @media (max-width:768px) {
             .container { padding:5px; }
             .window-body { min-height:75vh; padding:12px; }
-            .hangman-figure { font-size:140px; }
+            .hangman-figure { font-size:80px; min-height: 120px; }
             .word-display { font-size:2.8rem; letter-spacing:8px; }
             .letter-btn { width:45px; height:45px; font-size:1.6rem; }
         }
@@ -136,11 +148,11 @@
         <div class="window">
             <div class="window-header">
                 <span>🔵 Adivina la palabra - Estilo Marino Crema</span>
-                <button onclick="location.reload()">↻ Reiniciar</button>
+                <button onclick="location.reload()" style="background:none; border:none; color:white; font-family:inherit; font-size:1.1rem; cursor:pointer; font-weight:bold;">↻ Reiniciar</button>
             </div>
             <div class="window-body">
                 <div class="game-container">
-                    <div class="hangman-figure" id="hangman"> </div>
+                    <div class="hangman-figure" id="hangman"></div>
                     <div class="word-display" id="wordDisplay">_ _ _ _ _ _</div>
                     <div class="letters" id="letters"></div>
                     <div class="message" id="message"></div>
@@ -158,14 +170,15 @@
         let guessedLetters = new Set();
         let attemptsLeft = 6;
 
+        // Arreglo corregido con espacios para que el muñeco quede alineado y estable
         const hangmanStages = [
-            "",           // 0
-            "O",          // 1 cabeza
-            "O\n|",       // 2 cuerpo
-            "O\n/|",      // 3 brazo izq
-            "O\n/|\\",    // 4 brazos
-            "O\n/|\\ \n/", // 5 pierna izq
-            "O\n/|\\ \n/ \\" // 6 completo
+            "",               // 0
+            "  O  ",          // 1 cabeza
+            "  O  \n  |  ",        // 2 cuerpo
+            "  O  \n /|  ",        // 3 brazo izq
+            "  O  \n /|\\ ",       // 4 brazos
+            "  O  \n /|\\ \n /   ",   // 5 pierna izq
+            "  O  \n /|\\ \n / \\ "   // 6 completo
         ];
 
         const hangmanEl = document.getElementById("hangman");
@@ -177,7 +190,7 @@
         function initGame() {
             guessedLetters.clear();
             attemptsLeft = 6;
-            hangmanEl.textContent = "";
+            hangmanEl.textContent = hangmanStages[0]; // Iniciamos con el estado 0
             messageEl.textContent = "";
             attemptsEl.textContent = attemptsLeft;
 
@@ -198,6 +211,12 @@
         function guessLetter(letter) {
             if (guessedLetters.has(letter) || attemptsLeft <= 0) return;
             guessedLetters.add(letter);
+
+            // Deshabilitar el botón que se acaba de tocar
+            const buttons = document.querySelectorAll(".letter-btn");
+            buttons.forEach(btn => {
+                if (btn.textContent === letter) btn.disabled = true;
+            });
 
             if (selectedWord.includes(letter)) {
                 wordDisplay.textContent = selectedWord.split("").map(l => guessedLetters.has(l) ? l : "_").join(" ");

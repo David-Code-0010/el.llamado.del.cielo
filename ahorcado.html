@@ -10,8 +10,14 @@
 
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
-        html, body { width:100%; height:100%; overflow:hidden; }
+        
+        /* CORRECCIÓN: Quitamos overflow:hidden estricto para permitir scroll en móviles */
+        html { width:100%; height:100%; }
         body {
+            width:100%; 
+            min-height: 100vh;
+            overflow-x: hidden; /* Evita scroll horizontal */
+            overflow-y: auto;   /* PERMITE scroll vertical si se necesita */
             font-family:'VT323','Segoe UI',monospace;
             background:#1e293b url('https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/fondo_frutiger.png') center/cover fixed no-repeat;
             color:#f5f5f5;
@@ -33,7 +39,7 @@
             pointer-events:none; z-index:-1;
         }
 
-        .container { max-width:900px; margin:0 auto; position:relative; z-index:10; padding:15px; }
+        .container { max-width:900px; margin:0 auto; position:relative; z-index:10; padding:15px; padding-top: 60px; /* Espacio para el botón de volver */ }
         .top-bar {
             display:flex; justify-content:space-between; align-items:center;
             background:linear-gradient(180deg, #1e40af 0%, #1e3a8a 100%);
@@ -73,22 +79,20 @@
             text-align:center; width:100%; max-width:500px;
         }
 
-        /* --- CONTENEDOR BLINDADO PARA EL AHORCADO --- */
         .hangman-figure {
             font-size: 80px; 
             margin: 0 auto 20px auto; 
             color: #1e293b;
             text-shadow: 0 4px 10px rgba(30,41,59,0.3);
-            /* Fijamos ancho y alto para crear una caja que no se deforme NUNCA */
             width: 250px;
             height: 250px; 
             white-space: pre; 
             font-family: monospace; 
-            line-height: 1.1; /* Un poco de respiro entre las líneas */
+            line-height: 1.1;
             display: flex;
-            align-items: flex-end; /* Lo pegamos al fondo de la caja */
+            align-items: flex-end;
             justify-content: center;
-            overflow: hidden; /* Oculta cualquier cosa que se salga por error */
+            overflow: hidden; 
         }
 
         .word-display {
@@ -96,7 +100,7 @@
             color:#1e40af; text-shadow:0 2px 8px rgba(30,64,175,0.4);
         }
         .letters {
-            display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin:20px 0;
+            display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin:20px 0;
         }
         .letter-btn {
             width:50px; height:50px; font-size:1.8rem;
@@ -115,10 +119,13 @@
             background:#cbd5e1; box-shadow:none;
         }
 
+        /* CORRECCIÓN: El mensaje ahora puede crecer si es muy largo */
         .message {
             font-size:2.5rem; margin:10px 0; color:#1e40af;
             text-shadow:0 2px 8px rgba(30,64,175,0.4);
-            height: 40px; /* Altura fija para el mensaje */
+            min-height: 40px; /* Cambiado de height a min-height */
+            line-height: 1.2;
+            padding: 0 10px;
         }
 
         .back-btn {
@@ -131,13 +138,21 @@
         }
         .back-btn:hover { transform:translateY(-2px); box-shadow:0 4px 12px rgba(30,64,175,0.35); }
 
+        /* --- CORRECCIONES PARA MÓVILES (RESPONSIVE) --- */
         @media (max-width:768px) {
-            .container { padding:5px; }
-            .window-body { min-height:75vh; padding:12px; }
-            /* Ajuste del contenedor blindado para móviles */
-            .hangman-figure { font-size:60px; width: 180px; height: 180px; } 
-            .word-display { font-size:2.8rem; letter-spacing:8px; }
-            .letter-btn { width:45px; height:45px; font-size:1.6rem; }
+            .container { padding: 10px; padding-top: 60px; }
+            .window-header { flex-direction: column; gap: 10px; text-align: center; } /* Adapta la barra superior */
+            .window-body { min-height: auto; padding: 15px 5px; } 
+            .hangman-figure { font-size:60px; width: 180px; height: 180px; margin-bottom: 10px; } 
+            
+            /* Achicamos la palabra para que quepa en la pantalla */
+            .word-display { font-size: 2rem; letter-spacing: 5px; margin: 15px 0; }
+            
+            /* Achicamos los botones para que entren más por fila */
+            .letter-btn { width:40px; height:40px; font-size:1.4rem; }
+            
+            /* Hacemos el texto de Perdiste/Ganaste más pequeño para que se lea completo */
+            .message { font-size: 1.6rem; min-height: 30px; }
         }
     </style>
 </head>
@@ -153,8 +168,8 @@
 
         <div class="window">
             <div class="window-header">
-                <span>🔵 Adivina la palabra - Estilo Marino Crema</span>
-                <button onclick="location.reload()" style="background:none; border:none; color:white; font-family:inherit; font-size:1.1rem; cursor:pointer; font-weight:bold;">↻ Reiniciar</button>
+                <span>🔵 Adivina la palabra</span>
+                <button onclick="location.reload()" style="background:none; border:none; color:white; font-family:inherit; font-size:1.1rem; cursor:pointer; font-weight:bold; padding: 5px;">↻ Reiniciar</button>
             </div>
             <div class="window-body">
                 <div class="game-container">
@@ -176,7 +191,6 @@
         let guessedLetters = new Set();
         let attemptsLeft = 6;
 
-        // Arreglo reescrito. ¡Asegúrate de no usar tabuladores aquí, solo espacios normales!
         const hangmanStages = [
             "\n\n",
             "  O  \n\n",

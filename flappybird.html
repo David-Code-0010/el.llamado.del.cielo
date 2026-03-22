@@ -1,400 +1,254 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Kawaii Flappy Bird</title>
-  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-  
-<style>
-/* =========================
-   ESTILOS RETRO KWAI
-   ========================= */
-body {
-  width: 100vw;
-  height: 100vh;
-  margin: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'VT323', monospace;
-  overflow: hidden;
-  background-color: #ffe6f2; /* Rosa pastel de fondo */
-  background-image: radial-gradient(#ffccde 15%, transparent 16%),
-  radial-gradient(#ffccde 15%, transparent 16%);
-  background-size: 60px 60px;
-  background-position: 0 0, 30px 30px;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAPPY SHARK - VINI'S WORLD</title>
 
-canvas {
-  position: absolute;
-  border-radius: 15px;
-  box-shadow: 0 10px 25px rgba(255, 105, 180, 0.4);
-}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Segoe+UI:wght@400;600;700&display=swap" rel="stylesheet">
 
-.ctn {
-  position: relative;
-  width: 360px;
-  height: 640px;
-  border: 8px solid #ffb7b2;
-  border-radius: 20px;
-  background: #fff;
-  overflow: hidden;
-}
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body {
+            width:100%; height:100%; overflow:hidden;
+        }
+        body {
+            font-family:'VT323', 'Segoe UI', monospace;
+            background:#4a7ba7 url('https://raw.githubusercontent.com/David-Code-0010/el.llamado.del.cielo/main/fondo_frutiger.png') center/cover fixed no-repeat;
+            color:#333;
+            position:relative;
+            font-weight:bold;
+            font-style:italic;
+        }
+        body::before {
+            content:''; position:fixed; inset:0;
+            background:linear-gradient(180deg, #4a7ba7 0%, #6eb4d6 70%, #8cc5e1 100%);
+            z-index:-2;
+        }
+        body::after {
+            content:''; position:fixed; inset:0;
+            background:
+                radial-gradient(ellipse at 20% 30%, rgba(255,255,255,0.08), transparent 40%),
+                radial-gradient(ellipse at 80% 70%, rgba(0,0,0,0.05), transparent 50%),
+                linear-gradient(rgba(18,16,16,0) 50%, rgba(0,0,0,0.03) 50%);
+            background-size:100% 100%,100% 100%,100% 4px;
+            pointer-events:none; z-index:-1;
+        }
 
-#scoreboard {
-  position: absolute;
-  top: 10%;
-  width: 360px;
-  text-align: center;
-  font-size: 80px;
-  color: #ff69b4;
-  text-shadow: 3px 3px 0 #fff;
-  z-index: 10;
-  pointer-events: none;
-}
+        .container {
+            max-width:900px; margin:0 auto; position:relative; z-index:10; padding:10px;
+        }
 
-#start-screen {
-  position: absolute;
-  top: 20px;
-  width: 100%;
-  pointer-events: none;
-}
+        .top-bar {
+            display:flex; justify-content:space-between; align-items:center;
+            background:linear-gradient(180deg, #0072c6 0%, #005fa6 100%);
+            border:2px solid rgba(255,255,255,0.9); border-radius:6px; color:white;
+            font-size:1.3rem; margin-bottom:12px;
+            box-shadow:0 4px 12px rgba(0,114,198,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+            padding:8px 15px; height:48px;
+        }
+        .game-title {
+            font-size:1.8rem; white-space:nowrap;
+            background:linear-gradient(to right, #ffffff 0%, #ffffff 45%, #00bfff 50%, #ffffff 55%, #ffffff 100%);
+            background-size:200% auto; background-clip:text; -webkit-background-clip:text;
+            -webkit-text-fill-color:transparent; animation:blueShine 3s linear infinite reverse;
+        }
+        @keyframes blueShine { to { background-position:200% center; } }
 
-#gameover-screen {
-  visibility: hidden;
-  position: absolute;
-  width: 360px;
-  height: 640px;
-  opacity: 0;
-  transition: opacity 0.5s;
-  text-align: center;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(2px);
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
+        .window {
+            background:linear-gradient(180deg, rgba(255,255,255,0.97) 0%, rgba(248,250,252,0.96) 40%, rgba(240,245,250,0.95) 100%);
+            border:1px solid rgba(0,0,0,0.15); border-radius:8px;
+            box-shadow:0 4px 16px rgba(0,114,198,0.3), inset 0 1px 0 rgba(255,255,255,0.9);
+            overflow:hidden;
+        }
+        .window-header {
+            background:linear-gradient(180deg, #0072c6 0%, #005fa6 100%);
+            color:white; padding:8px 12px; font-size:1.2rem; font-weight:bold;
+            display:flex; justify-content:space-between; align-items:center;
+            text-shadow:0 1px 2px rgba(0,0,0,0.4);
+        }
+        .window-body {
+            padding:15px; min-height:60vh;
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
+            position:relative;
+        }
 
-#gameover {
-  width: auto;
-  background-color: #ff69b4;
-  color: #ffffff;
-  padding: 15px 30px;
-  font-size: 50px;
-  border-radius: 50px;
-  border: 4px dashed #fff;
-  box-shadow: 0 5px 15px rgba(255, 105, 180, 0.5);
-  margin-bottom: 30px;
-}
+        canvas {
+            background:#a8d8ff; /* aguas cristalinas de base */
+            border-radius:8px;
+            box-shadow:0 4px 15px rgba(0,80,150,0.4);
+            max-width:100%;
+        }
 
-#replay {
-  background-color: #87ceeb;
-  color: #ffffff;
-  padding: 10px 30px;
-  font-size: 30px;
-  border-radius: 20px;
-  border: 2px solid #fff;
-  cursor: pointer;
-  transition: transform 0.2s;
-  box-shadow: 0 4px 0 #5fb0d1;
-}
+        .score {
+            position:absolute; top:20px; left:50%; transform:translateX(-50%);
+            font-size:3rem; color:#ffffff; text-shadow:0 0 10px #00bfff, 0 0 20px #00bfff;
+            z-index:20; pointer-events:none;
+        }
 
-#replay:hover {
-  transform: scale(1.1);
-  background-color: #9ce0ff;
-}
+        .back-btn {
+            position:absolute; top:15px; left:15px; z-index:30;
+            background:linear-gradient(180deg,#f8f8f8,#e8e8e8); border:1px solid #bfbfbf;
+            border-radius:6px; padding:8px 16px; cursor:pointer;
+            box-shadow:0 2px 8px rgba(0,0,0,0.15); transition:all 0.2s;
+        }
+        .back-btn:hover {
+            background:linear-gradient(180deg,#ffffff,#f0f0f0); transform:translateY(-2px);
+            box-shadow:0 4px 12px rgba(0,114,198,0.3);
+        }
 
-#ctrl-ctn {
-  position: absolute;
-  top: 400px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  opacity: 1;
-  transition: opacity 1s;
-}
+        ::-webkit-scrollbar { width:12px; }
+        ::-webkit-scrollbar-track { background:rgba(255,255,255,0.15); }
+        ::-webkit-scrollbar-thumb { background:rgba(0,114,198,0.7); border-radius:6px; border:2px solid rgba(255,255,255,0.4); }
 
-.ctrl-btn {
-  display: inline-block;
-  background-color: #ffb7b2;
-  color: #ffffff;
-  font-size: 24px;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 15px;
-  border: 2px dashed #fff;
-  box-shadow: 2px 2px 0 #ff9aa2;
-}
-</style>
-
+        @media (max-width:768px) {
+            .container { padding:5px; }
+            .window-body { min-height:70vh; padding:10px; }
+            .top-bar { font-size:1.1rem; height:42px; }
+        }
+    </style>
 </head>
 <body>
 
-<div class="ctn">
-  <canvas id="c" width="360" height="640"></canvas>
-  <div id="scoreboard">0</div>
-  
-  <div id="start-screen">
-    <div id="ctrl-ctn">
-      <div class="ctrl-btn">TAP / ESPACIO</div>
-      <div class="ctrl-btn" style="background:#87ceeb">JUGAR</div>
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver</a>
+
+    <div class="container">
+        <div class="top-bar">
+            <div class="game-title">FLAPPY SHARK</div>
+            <div>Puntuación: <span id="scoreDisplay">0</span></div>
+        </div>
+
+        <div class="window">
+            <div class="window-header">
+                <span>JUGANDO: FLAPPY SHARK 🦈</span>
+                <button onclick="location.reload()">↻ Reiniciar</button>
+            </div>
+            <div class="window-body">
+                <div class="score" id="score">0</div>
+                <canvas id="canvas" width="400" height="600"></canvas>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div id="gameover-screen">
-    <div id="gameover">GAME OVER</div>
-    <div id="replay">REINTENTAR ↻</div>
-  </div>
-</div>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreElement = document.getElementById('score');
 
-<script>
-/* ==========================================
-   RECURSOS GRÁFICOS (SVG INTEGRADO)
-   ========================================== */
-
-// --- NUEVO: PÁJARO KAWAII ROSA (SVG) ---
-var birdSVG = `
-<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-  <path d="M5 25 L 15 20 L 15 30 Z" fill="#ff66b2"/>
-  <circle cx="35" cy="30" r="20" fill="#ff99cc" stroke="#ff66b2" stroke-width="2"/>
-  <ellipse cx="35" cy="38" rx="12" ry="8" fill="#ffcce6"/>
-  <circle cx="42" cy="26" r="3.5" fill="#000"/>
-  <circle cx="44" cy="24.5" r="1.5" fill="#fff"/>
-  <polygon points="52,28 58,30 52,32" fill="#ffcc00" stroke="#ffaa00" stroke-width="1"/>
-  <ellipse cx="25" cy="30" rx="8" ry="5" fill="#ff66b2" transform="rotate(-10 25 30)"/>
-</svg>`;
-
-// 2. FONDO (Cielo)
-var bgSVG = `
-  <svg width="360" height="640" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" style="stop-color:#bce6ff;stop-opacity:1" />
-        <stop offset="100%" style="stop-color:#ffe6f2;stop-opacity:1" />
-      </linearGradient>
-    </defs>
-    <rect width="360" height="640" fill="url(#skyGradient)" />
-    <circle cx="280" cy="80" r="40" fill="#fff5b8" opacity="0.8" />
-    <circle cx="280" cy="80" r="30" fill="#fffacd" />
-    <path d="M50 150 Q 70 120 90 150 T 130 150 T 170 150" fill="none" stroke="#fff" stroke-width="20" stroke-linecap="round" opacity="0.4"/>
-    <path d="M200 300 Q 220 270 240 300 T 280 300" fill="none" stroke="#fff" stroke-width="25" stroke-linecap="round" opacity="0.3"/>
-  </svg>
-`;
-
-// 3. SUELO (Nubes)
-var fgSVG = `
-  <svg width="360" height="150" xmlns="http://www.w3.org/2000/svg">
-     <defs>
-      <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#ffb7b2" flood-opacity="0.5"/>
-      </filter>
-    </defs>
-    <path d="M0 40 Q 30 10 60 40 Q 90 10 120 40 Q 150 10 180 40 Q 210 10 240 40 Q 270 10 300 40 Q 330 10 360 40 V 150 H 0 Z" 
-          fill="#ffffff" filter="url(#shadow)" />
-    <circle cx="40" cy="80" r="5" fill="#e0f7fa" />
-    <circle cx="140" cy="100" r="8" fill="#e0f7fa" />
-    <circle cx="260" cy="70" r="6" fill="#e0f7fa" />
-  </svg>
-`;
-
-// 4. OBSTÁCULOS (Columnas)
-var boneOpen = `<svg width="80" height="400" xmlns="http://www.w3.org/2000/svg">`;
-var boneMid = `
-  <rect x="15" y="0" width="50" height="400" fill="#ffffff" stroke="#ffcce0" stroke-width="4" />
-  <line x1="25" y1="0" x2="25" y2="400" stroke="#f0f8ff" stroke-width="3" />
-  <line x1="40" y1="0" x2="40" y2="400" stroke="#f0f8ff" stroke-width="3" />
-  <line x1="55" y1="0" x2="55" y2="400" stroke="#f0f8ff" stroke-width="3" />
-  <rect x="5" y="0" width="70" height="30" rx="5" fill="#fff0f5" stroke="#ff69b4" stroke-width="3" />
-  <circle cx="15" cy="15" r="5" fill="#ff69b4" />
-  <circle cx="65" cy="15" r="5" fill="#ff69b4" />
-`;
-var boneClose = `</svg>`;
-
-var botBoneSVG = boneOpen + boneMid + boneClose;
-var topBoneSVG = boneOpen + '<g transform="rotate(180 40 200)">' + boneMid + '</g>' + boneClose;
-
-/* ==========================================
-   LÓGICA DEL JUEGO
-   ========================================== */
-
-// Cargar SVGs como imágenes
-var bg = new Image(); bg.src = "data:image/svg+xml," + encodeURIComponent(bgSVG);
-var fg = new Image(); fg.src = "data:image/svg+xml," + encodeURIComponent(fgSVG);
-var topBone = new Image(); topBone.src = "data:image/svg+xml," + encodeURIComponent(topBoneSVG);
-var botBone = new Image(); botBone.src = "data:image/svg+xml," + encodeURIComponent(botBoneSVG);
-// Cargar el nuevo Pájaro
-var birdImg = new Image(); birdImg.src = "data:image/svg+xml," + encodeURIComponent(birdSVG);
-
-var canvas = document.getElementById("c");
-var ctx = canvas.getContext("2d");
-
-var hitboxWidth = 40; 
-var hitboxHeight = 40;
-var spriteOffset_X = -10;
-var spriteOffset_Y = -10;
-var fgPos_X = 0;
-
-// Variables del jugador (usamos 'bird' en la lógica ahora)
-var birdPos_X = 100;
-var birdPos_Y = 250;
-var birdAngle = 0;
-
-var minBoneHeight = -330;
-var maxBoneHeight = -160;
-var scrollSpeed = -2.5;
-var gravity = 0.25;
-var lift = -7;
-var velocity = 0;
-
-var start = false;
-var gameOver = false;
-var score = 0;
-var bonePtr = 0;
-var boneStart = 400;
-var flyGap = 160; 
-var boneGap = 260; 
-
-var bones = [
-  { x: boneStart, y: getRandomHeight(minBoneHeight, maxBoneHeight) },
-  { x: boneStart + boneGap, y: getRandomHeight(minBoneHeight, maxBoneHeight) },
-  { x: boneStart + 2 * boneGap, y: getRandomHeight(minBoneHeight, maxBoneHeight) }
-];
-
-function getRandomHeight(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
-
-function playerInput() {
-  if (!start) {
-    start = true;
-    velocity = lift;
-    birdAngle = -20;
-    document.getElementById("ctrl-ctn").style.opacity = 0;
-  } else {
-    if (!gameOver) {
-      velocity = lift;
-      birdAngle = -20;
-    }
-  }
-}
-
-function checkCollision() {
-  if (birdPos_Y <= -hitboxHeight) velocity = 0;
-
-  // Choque con nubes (Suelo)
-  if (birdPos_Y + hitboxHeight >= canvas.height - 100) { 
-    velocity = 0;
-    birdPos_Y = canvas.height - 100 - hitboxHeight;
-    setGameOver();
-  }
-
-  // Choque con Columnas
-  if (
-    birdPos_X + hitboxWidth >= bones[bonePtr].x + 10 && 
-    birdPos_X < bones[bonePtr].x + topBone.width - 10 &&
-    (birdPos_Y <= bones[bonePtr].y + 400 || 
-      birdPos_Y + hitboxHeight >= bones[bonePtr].y + 400 + flyGap)
-  ) {
-    setGameOver();
-  }
-}
-
-function replay() {
-  start = false;
-  gameOver = false;
-  score = 0;
-  velocity = 0;
-  birdPos_X = 100;
-  birdPos_Y = 250;
-  birdAngle = 0;
-  bonePtr = 0;
-  bones = [
-    { x: boneStart, y: getRandomHeight(minBoneHeight, maxBoneHeight) },
-    { x: boneStart + boneGap, y: getRandomHeight(minBoneHeight, maxBoneHeight) },
-    { x: boneStart + 2 * boneGap, y: getRandomHeight(minBoneHeight, maxBoneHeight) }
-  ];
-  document.getElementById("ctrl-ctn").style.opacity = 1;
-  document.getElementById("gameover-screen").style.visibility = "hidden";
-  document.getElementById("gameover-screen").style.opacity = 0;
-}
-
-function setGameOver() {
-  gameOver = true;
-  document.getElementById("gameover-screen").style.visibility = "visible";
-  document.getElementById("gameover-screen").style.opacity = 1;
-}
-
-function update() {
-  if (!gameOver) {
-    fgPos_X += scrollSpeed;
-    if (fgPos_X <= -canvas.width) fgPos_X = 0;
-  }
-
-  if (start) {
-    velocity += gravity;
-    birdPos_Y += velocity;
-    if (velocity < 0) birdAngle = -15;
-    else birdAngle = Math.min(birdAngle + 1.5, 45);
-    checkCollision();
-    
-    if (!gameOver) {
-      for (var i = 0; i < bones.length; i++) {
-        bones[i].x += scrollSpeed;
-        if (bones[i].x <= -topBone.width) {
-          if (i == 0) bones[0].x = bones[bones.length - 1].x + boneGap;
-          else bones[i].x = bones[i - 1].x + boneGap;
-          bones[i].y = getRandomHeight(minBoneHeight, maxBoneHeight);
+        // Ajuste responsive del canvas
+        function resizeCanvas() {
+            const maxW = Math.min(window.innerWidth * 0.9, 450);
+            const aspect = 400 / 600;
+            canvas.width = maxW;
+            canvas.height = maxW / aspect;
         }
-      }
-      if (birdPos_X >= bones[bonePtr].x + topBone.width) {
-        score++;
-        if (bonePtr == 2) bonePtr = 0;
-        else bonePtr++;
-      }
-    }
-  }
-  render();
-}
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
 
-function render() {
-  document.getElementById("scoreboard").innerHTML = score;
-  ctx.drawImage(bg, 0, 0);
+        // Variables del juego
+        let birdX = 100;
+        let birdY = 300;
+        let birdVelocity = 0;
+        let gravity = 0.5;
+        let jumpPower = -10;
+        let pipes = [];
+        let score = 0;
+        let gameOver = false;
+        let frame = 0;
 
-  for (var i = 0; i < bones.length; i++) {
-    ctx.drawImage(topBone, bones[i].x, bones[i].y);
-    ctx.drawImage(botBone, bones[i].x, bones[i].y + 400 + flyGap);
-  }
+        // Fondo aguas cristalinas (gradiente + burbujas simples)
+        function drawBackground() {
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, '#7dd3fc');
+            grad.addColorStop(0.4, '#38bdf8');
+            grad.addColorStop(1, '#0284c7');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  ctx.save();
-  ctx.translate(birdPos_X + hitboxWidth / 2 + spriteOffset_X, birdPos_Y + hitboxHeight / 2);
-  
-  if(!start) birdPos_Y = 250 + Math.sin(Date.now()/300) * 10;
-  else ctx.rotate(birdAngle * Math.PI / 180);
+            // Algas marinas (obstáculos)
+            ctx.fillStyle = '#065f46';
+            pipes.forEach(pipe => {
+                // Tubo superior (alga invertida)
+                ctx.fillRect(pipe.x, 0, 70, pipe.top);
+                // Tubo inferior (alga normal)
+                ctx.fillRect(pipe.x, canvas.height - pipe.bottom, 70, pipe.bottom);
+            });
+        }
 
-  // DIBUJAR PÁJARO KAWAII (60x60 tamaño visual)
-  ctx.drawImage(birdImg, -30, -30, 60, 60);
-  ctx.restore();
+        // Tiburón (emoji estilizado simple)
+        function drawShark() {
+            ctx.font = '60px Arial';
+            ctx.fillText('🦈', birdX - 30, birdY + 20);
+            // Opcional: rotación según velocidad
+            ctx.save();
+            ctx.translate(birdX, birdY);
+            ctx.rotate(birdVelocity * 0.05);
+            ctx.fillText('🦈', -30, 20);
+            ctx.restore();
+        }
 
-  ctx.drawImage(fg, fgPos_X, canvas.height - 120); 
-  ctx.drawImage(fg, fgPos_X + fg.width, canvas.height - 120);
+        // Generar algas (pipes)
+        function spawnPipe() {
+            const gap = 180;
+            const minHeight = 80;
+            const maxHeight = canvas.height - gap - minHeight;
+            const top = Math.floor(Math.random() * (maxHeight - minHeight) + minHeight);
+            pipes.push({ x: canvas.width, top: top, bottom: canvas.height - top - gap });
+        }
 
-  window.requestAnimationFrame(update);
-}
+        // Colisión
+        function checkCollision() {
+            if (birdY < 0 || birdY > canvas.height) return true;
+            for (let pipe of pipes) {
+                if (birdX + 30 > pipe.x && birdX - 30 < pipe.x + 70) {
+                    if (birdY - 30 < pipe.top || birdY + 30 > canvas.height - pipe.bottom) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
-document.addEventListener("keydown", function(e) {
-  var char = e.which || e.keyCode;
-  if (char == 32 || char == 38) { e.preventDefault(); playerInput(); }
-});
+        // Game loop
+        function update() {
+            if (gameOver) return;
 
-document.addEventListener("touchstart", function(e) {
-    e.preventDefault(); playerInput();
-}, {passive: false});
+            birdVelocity += gravity;
+            birdY += birdVelocity;
 
-document.getElementById("replay").addEventListener("click", function() { replay(); });
+            if (frame % 90 === 0) spawnPipe();
+            frame++;
 
-update();    
-</script>
+            // Mover algas
+            pipes.forEach(pipe => {
+                pipe.x -= 2;
+                if (pipe.x + 70 < 0) pipes.shift();
+                if (pipe.x + 35 === birdX) score++;
+            });
+
+            if (checkCollision()) {
+                gameOver = true;
+                alert(`¡Game Over! Puntuación: ${score}`);
+            }
+
+            scoreElement.textContent = score;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBackground();
+            drawShark();
+            update();
+            requestAnimationFrame(draw);
+        }
+
+        // Salto con click o espacio
+        canvas.addEventListener('click', () => { if (!gameOver) birdVelocity = jumpPower; });
+        document.addEventListener('keydown', e => { if (e.code === 'Space' && !gameOver) birdVelocity = jumpPower; });
+
+        spawnPipe(); // Primera alga
+        draw();
+    </script>
 </body>
 </html>

@@ -15,7 +15,6 @@
         --scale-factor: 1;
     }
 
-    /* Escalado dinámico para pantallas pequeñas sin romper la grilla de 30px del JS */
     @media (max-height: 850px) { :root { --scale-factor: 0.85; } }
     @media (max-height: 700px) { :root { --scale-factor: 0.7; } }
     @media (max-width: 600px) { :root { --scale-factor: 0.85; } }
@@ -27,7 +26,6 @@
        ========================================= */
     body {
         background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
-        /* Efecto de "burbujas" en el fondo */
         background-image: 
             radial-gradient(circle at 15% 50%, rgba(255, 255, 255, 0.4) 0%, transparent 10%),
             radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 15%),
@@ -43,7 +41,49 @@
         overflow: hidden;
     }
 
-    /* Efecto "Glassmorphism" (Cristal) para el contenedor */
+    /* BOTÓN VOLVER */
+    #btn-volver {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        text-decoration: none;
+        color: #0077b6;
+        background: rgba(255, 255, 255, 0.5);
+        padding: 10px 20px;
+        border-radius: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        font-weight: bold;
+        font-size: 1.1rem;
+        box-shadow: 0 4px 10px rgba(0, 119, 182, 0.2), inset 0 2px 5px rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s ease;
+    }
+
+    #btn-volver:hover {
+        transform: scale(1.05);
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 6px 15px rgba(0, 119, 182, 0.3), inset 0 2px 5px rgba(255, 255, 255, 0.8);
+    }
+
+    #btn-volver:active {
+        transform: scale(0.95);
+    }
+
+    @media (max-width: 600px) {
+        #btn-volver {
+            top: 10px;
+            left: 10px;
+            padding: 8px 15px;
+            font-size: 1rem;
+        }
+    }
+
+    /* Contenedor Principal */
     #outer-board {
         display: flex;
         gap: 20px;
@@ -55,8 +95,6 @@
         box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2), inset 0 0 20px rgba(255,255,255,0.5);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
-        
-        /* Aplicamos la escala responsiva aquí */
         transform: scale(var(--scale-factor));
         transform-origin: center;
     }
@@ -66,8 +104,8 @@
        ========================================= */
     #board {
         position: relative;
-        width: 300px;  /* 10 columnas x 30px */
-        height: 600px; /* 20 filas x 30px */
+        width: 300px;
+        height: 600px;
         background: rgba(255, 255, 255, 0.4);
         border: 2px solid rgba(255, 255, 255, 0.8);
         border-radius: 10px;
@@ -75,7 +113,6 @@
         overflow: hidden;
     }
 
-    /* Las celdas vacías del fondo */
     .empty {
         width: 30px;
         height: 30px;
@@ -83,7 +120,6 @@
         box-sizing: border-box;
     }
 
-    /* Los bloques activos (Piezas) */
     .block {
         width: 30px;
         height: 30px;
@@ -93,7 +129,6 @@
         transition: top 0.1s linear, left 0.1s linear;
     }
 
-    /* Diseño visual del bloque (efecto brillante/gel 3D Aero) */
     .inner-tile {
         width: 100%;
         height: 100%;
@@ -105,7 +140,6 @@
         box-shadow: inset 0 -3px 5px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.2);
     }
 
-    /* Reflejo superior estilo Glossy */
     .inner-inner-tile {
         position: absolute;
         top: 1px; left: 1px; right: 1px;
@@ -189,7 +223,6 @@
         box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
     }
 
-    /* Botones estilo Aero Glossy */
     .btn {
         width: 60px; height: 60px;
         border-radius: 50%;
@@ -211,7 +244,6 @@
         box-shadow: 0 2px 5px rgba(0, 119, 182, 0.2), inset 0 3px 6px rgba(0, 0, 0, 0.1);
     }
 
-    /* Estilos para móviles: Cambia de layout sin romper JS */
     @media (max-width: 600px) {
         #outer-board { flex-direction: column; align-items: center; padding: 15px; }
         #stats { flex-direction: row; flex-wrap: wrap; justify-content: center; width: 100%; }
@@ -221,6 +253,10 @@
 </style>
 </head>
 <body>
+
+<a href="index.html" id="btn-volver">
+    <i class="fas fa-arrow-left"></i> Volver
+</a>
 
 <div id="outer-board">
   <div id="board"> 
@@ -232,7 +268,6 @@
     </div>
     
     <script>
-        // Generador de celdas vacías (Estilo de guías visuales sutiles)
         for(let i=0; i<200; i++) {
             document.write('<div class="empty"><div class="inner-tile" style="opacity:0.2; background:none; border:1px solid #ffffff; box-shadow:none;"></div></div>');
         }
@@ -256,7 +291,7 @@
 
 <script>
 /* =========================================
-   LÓGICA DEL JUEGO (Con Gravedad Arreglada)
+   LÓGICA DEL JUEGO
    ========================================= */
 
 class Position {
@@ -316,7 +351,6 @@ class Shape {
   rotatePositions() { return []; }
 }
 
-/* --- FORMAS --- */
 class Square extends Shape {
   constructor(x, y) { super([new Block(x, y), new Block(x, y + 1), new Block(x + 1, y), new Block(x + 1, y + 1)]); }
 }
@@ -393,9 +427,6 @@ class Line extends Shape {
     getNextPosition() { return (this.position + 1) % 2; }
 }
 
-/* =========================================
-   CLASE PRINCIPAL: BOARD
-   ========================================= */
 class Board {
   constructor() {
     this.blocks = [];
@@ -416,7 +447,6 @@ class Board {
     
     $("#new-game").click(() => this.newGame());
     
-    // Evita comportamiento de zoom/doble tap en móviles
     $('.btn').on('touchstart', function(e) { e.preventDefault(); $(this).click(); });
 
     $("#left").click(() => this.inputLeft());
@@ -533,7 +563,6 @@ class Board {
       return false;
   }
 
-  // --- BORRADO DE LÍNEAS ARREGLADO ---
   checkRowClearing() {
       let rowsToClear = [];
       
@@ -552,7 +581,6 @@ class Board {
               this.blocks = this.blocks.filter(b => b.x !== rowIndex);
           });
           
-          // Gravedad real: Ordenamos las filas de arriba hacia abajo
           rowsToClear.sort((a,b) => a - b);
           
           rowsToClear.forEach(clearedRow => {
@@ -580,7 +608,6 @@ class Board {
   }
 }
 
-// INICIAR EL JUEGO
 const board = new Board();
 
 </script>
